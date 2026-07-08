@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude for Small Business — What It Actually Does</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Manrope = display/body · Newsreader = italic serif accents -->
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ===========================================================
+   THEME — Boardroom Blue
+   Change these variables to re-skin the whole deck.
+   =========================================================== */
+:root{
+  --paper:#FAF7F0;         /* main slide background        */
+  --paper-2:#F1ECE0;       /* muted card / "before" panel  */
+  --paper-3:#E8E1D2;       /* deeper cream edge            */
+  --ink:#0E1524;           /* primary text                 */
+  --slate:#4A5468;         /* secondary text               */
+  --slate-2:#6B7383;       /* tertiary text                */
+  --cobalt:#1E48D4;        /* primary accent               */
+  --cobalt-deep:#12308F;   /* darker accent                */
+  --sky:#3E6BE8;           /* lighter accent               */
+  --line:rgba(14,21,36,.12);
+
+  /* brand dots (for tool recognition) */
+  --qb:#2CA01C; --pp:#0070BA; --hs:#FF7A59; --cv:#00C4CC;
+  --ds:#C9A400; --gg:#4285F4; --ms:#D83B01;
+
+  --font-display:'Manrope',sans-serif;
+  --font-serif:'Newsreader',serif;
+  --font-mono:'JetBrains Mono',monospace;
+
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+
+/* ===========================================================
+   FIXED 16:9 STAGE (from viewport-base pattern)
+   Slides authored at 1920x1080; the whole stage scales.
+   =========================================================== */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#0b1020;font-family:var(--font-display)}
+.deck-viewport{position:fixed;inset:0;overflow:hidden;background:#0b1020}
+.deck-stage{position:absolute;top:0;left:0;width:1920px;height:1080px;transform-origin:top left}
+
+.slide{
+  position:absolute;inset:0;
+  background:var(--paper);color:var(--ink);
+  padding:92px 120px;overflow:hidden;
+  display:flex;flex-direction:column;
+  /* switching handled ONLY by visibility/opacity — never display */
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .55s var(--ease),visibility .55s var(--ease);
+}
+.slide.active{opacity:1;visibility:visible;pointer-events:auto}
+
+/* subtle corner grid texture on cream slides */
+.slide::before{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.55;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:96px 96px;
+  -webkit-mask-image:radial-gradient(1200px 900px at 100% 0%,#000,transparent 70%);
+          mask-image:radial-gradient(1200px 900px at 100% 0%,#000,transparent 70%);
+}
+.slide>*{position:relative;z-index:1}
+
+/* ===========================================================
+   ENTRANCE ANIMATIONS — run when slide gains .active
+   =========================================================== */
+.reveal{opacity:0;transform:translateY(34px);
+  transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.slide.active .reveal{opacity:1;transform:none}
+.d1{transition-delay:.05s}.d2{transition-delay:.13s}.d3{transition-delay:.21s}
+.d4{transition-delay:.29s}.d5{transition-delay:.37s}.d6{transition-delay:.45s}
+.d7{transition-delay:.53s}.d8{transition-delay:.61s}.d9{transition-delay:.69s}
+
+/* ===========================================================
+   SHARED COMPONENTS
+   =========================================================== */
+.spark{width:30px;height:30px;border-radius:50%;flex:none;
+  background:conic-gradient(from 20deg,var(--sky),var(--cobalt),var(--cobalt-deep),var(--sky));
+  box-shadow:0 4px 16px rgba(30,72,212,.45)}
+
+/* slide header */
+.shead{display:flex;align-items:flex-start;gap:30px;margin-bottom:44px}
+.sh-num{font-family:var(--font-serif);font-style:italic;font-weight:500;font-size:62px;
+  color:var(--cobalt);line-height:.9;flex:none;width:96px}
+.sh-txt{flex:1}
+.sh-kick{font-weight:700;letter-spacing:.26em;text-transform:uppercase;font-size:18px;
+  color:var(--cobalt-deep);margin-bottom:12px}
+.shead h2{font-weight:800;font-size:66px;letter-spacing:-.025em;line-height:1.02}
+.shead h2 em{font-family:var(--font-serif);font-style:italic;font-weight:400;color:var(--cobalt)}
+.sh-rule{height:4px;width:120px;background:var(--cobalt);border-radius:2px;margin-top:22px}
+
+.body{flex:1;display:flex;flex-direction:column;min-height:0}
+
+/* before / after grid */
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+.ba-card{border-radius:20px;padding:38px 40px;display:flex;flex-direction:column}
+.ba-card .lab{display:flex;align-items:center;gap:12px;font-weight:700;font-size:19px;
+  letter-spacing:.16em;text-transform:uppercase;margin-bottom:22px}
+.ba-card h3{font-size:27px;font-weight:800;letter-spacing:-.01em;margin-bottom:16px;line-height:1.15}
+.ba-card ul{list-style:none;display:flex;flex-direction:column;gap:15px}
+.ba-card li{font-size:23px;line-height:1.45;padding-left:30px;position:relative}
+.before{background:var(--paper-2);color:var(--slate);border:1px solid var(--paper-3)}
+.before .lab{color:var(--slate-2)}
+.before li::before{content:"–";position:absolute;left:4px;color:var(--slate-2);font-weight:700}
+.before .badge{width:26px;height:26px;border-radius:50%;background:#D9CDB6;display:grid;place-items:center;font-size:16px}
+.after{background:linear-gradient(180deg,#fff, #F4F7FF);color:var(--ink);
+  border:2px solid rgba(30,72,212,.28);box-shadow:0 24px 60px rgba(30,72,212,.12)}
+.after .lab{color:var(--cobalt-deep)}
+.after .badge{width:26px;height:26px;border-radius:50%;background:var(--cobalt);display:grid;place-items:center}
+.after li{color:#26314A}
+.after li::before{content:"";position:absolute;left:6px;top:12px;width:12px;height:6px;
+  border-left:3px solid var(--cobalt);border-bottom:3px solid var(--cobalt);transform:rotate(-45deg)}
+.after li b{color:var(--cobalt-deep)}
+
+/* full-width cobalt callout */
+.callout{margin-top:28px;background:linear-gradient(120deg,var(--cobalt),var(--cobalt-deep));
+  color:#EAF0FF;border-radius:20px;padding:30px 40px;display:flex;align-items:center;gap:34px;
+  box-shadow:0 24px 60px rgba(18,48,143,.28);overflow:hidden;position:relative}
+.callout::after{content:"";position:absolute;right:-80px;top:-80px;width:320px;height:320px;border-radius:50%;
+  background:radial-gradient(circle,rgba(110,146,255,.55),transparent 65%)}
+.callout .tag{flex:none;font-family:var(--font-mono);font-size:15px;letter-spacing:.14em;text-transform:uppercase;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:10px 18px;z-index:1}
+.callout p{font-size:24px;line-height:1.45;font-weight:500;z-index:1}
+.callout p b{color:#fff;font-weight:800}
+
+/* takeaway line under a slide */
+.takeaway{margin-top:26px;font-family:var(--font-serif);font-style:italic;font-size:30px;
+  color:var(--slate);line-height:1.35}
+.takeaway b{color:var(--ink);font-style:normal;font-weight:700}
+
+/* footer chrome (per slide, inside stage) */
+.foot{position:absolute;left:120px;right:120px;bottom:44px;display:flex;justify-content:space-between;
+  align-items:center;font-size:16px;color:var(--slate-2);z-index:1}
+.foot .lft{display:flex;align-items:center;gap:12px;font-weight:600;letter-spacing:.02em}
+.foot .pill{font-family:var(--font-mono);font-size:14px;letter-spacing:.12em;color:var(--cobalt-deep);
+  background:rgba(30,72,212,.08);border:1px solid rgba(30,72,212,.2);border-radius:999px;padding:6px 14px}
+
+/* ===========================================================
+   SLIDE 1 — TITLE (split panel)
+   =========================================================== */
+.title-slide{padding:0;display:grid;grid-template-columns:1.55fr 1fr}
+.title-slide::before{display:none}
+.ts-left{padding:104px 84px 88px 120px;display:flex;flex-direction:column;justify-content:space-between}
+.ts-brand{display:flex;align-items:center;gap:16px;font-weight:700;font-size:23px;letter-spacing:.01em}
+.ts-left h1{font-weight:800;font-size:122px;line-height:.95;letter-spacing:-.035em;margin-top:8px}
+.ts-left h1 em{font-family:var(--font-serif);font-style:italic;font-weight:400;color:var(--cobalt)}
+.ts-lead{margin-top:34px;font-size:29px;line-height:1.55;color:var(--slate);max-width:780px;font-weight:500}
+.ts-tags{display:flex;gap:12px;flex-wrap:wrap}
+.ts-tag{font-size:18px;font-weight:600;color:var(--cobalt-deep);background:rgba(30,72,212,.07);
+  border:1px solid rgba(30,72,212,.22);border-radius:999px;padding:10px 20px}
+.ts-right{background:linear-gradient(200deg,#2A54DE 0%,#1E48D4 46%,#12308F 100%);position:relative;overflow:hidden}
+.ts-right::before{content:"";position:absolute;inset:0;opacity:.5;
+  background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);
+  background-size:74px 74px}
+.ts-glow{position:absolute;width:520px;height:520px;border-radius:50%;top:-120px;right:-120px;
+  background:radial-gradient(circle,#7E9CFF 0%,rgba(126,156,255,0) 68%);opacity:.7}
+.ts-badge{position:absolute;top:80px;left:70px;font-weight:700;font-size:18px;letter-spacing:.28em;
+  text-transform:uppercase;color:#CBD9FF;z-index:1}
+.ts-rlabel{position:absolute;bottom:92px;left:70px;right:70px;color:#EAF0FF;z-index:1}
+.ts-rlabel .big{font-family:var(--font-serif);font-style:italic;font-size:52px;line-height:1.06}
+.ts-rlabel .sm{margin-top:22px;font-size:20px;font-weight:600;color:#B9CCFF;line-height:1.6}
+
+/* ===========================================================
+   SLIDE 2 — WHAT IT IS
+   =========================================================== */
+.lead-statement{font-size:44px;line-height:1.25;font-weight:700;letter-spacing:-.02em;max-width:1500px;margin-bottom:38px}
+.lead-statement em{font-family:var(--font-serif);font-style:italic;font-weight:400;color:var(--cobalt)}
+.two-cards{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+.def-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:38px 40px;
+  box-shadow:0 18px 44px rgba(14,21,36,.06)}
+.def-card .k{font-family:var(--font-mono);font-size:15px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--cobalt-deep);margin-bottom:18px}
+.def-card h3{font-size:34px;font-weight:800;letter-spacing:-.02em;margin-bottom:16px}
+.def-card h3 span{color:var(--cobalt)}
+.def-card p{font-size:24px;line-height:1.5;color:var(--slate)}
+.def-card p b{color:var(--ink)}
+
+/* ===========================================================
+   SLIDE 3 — HUB & SPOKE
+   =========================================================== */
+.hub-wrap{flex:1;display:grid;grid-template-columns:1.2fr .8fr;align-items:center;gap:40px}
+.hub-svg{width:100%;max-width:680px;max-height:680px;height:auto;display:block;margin:0 auto}
+.hub-node{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.6);
+  transition:opacity .5s var(--ease),transform .5s var(--ease)}
+.slide.active .hub-node{opacity:1;transform:scale(1)}
+.hub-line{stroke:var(--cobalt);stroke-width:2;opacity:.28;stroke-dasharray:6 8}
+.hub-side h3{font-size:40px;font-weight:800;letter-spacing:-.02em;line-height:1.1;margin-bottom:20px}
+.hub-side h3 em{font-family:var(--font-serif);font-style:italic;font-weight:400;color:var(--cobalt)}
+.hub-side p{font-size:24px;line-height:1.55;color:var(--slate);margin-bottom:26px}
+.hub-legend{display:flex;flex-direction:column;gap:14px}
+.hub-legend div{display:flex;align-items:center;gap:14px;font-size:21px;font-weight:600;color:var(--ink)}
+.hub-legend i{width:14px;height:14px;border-radius:50%;flex:none}
+
+/* ===========================================================
+   SLIDE 4 — 4-STEP WORKFLOW
+   =========================================================== */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-bottom:auto}
+.step{background:#fff;border:1px solid var(--line);border-radius:20px;padding:34px 30px;position:relative;
+  box-shadow:0 16px 40px rgba(14,21,36,.05);display:flex;flex-direction:column;gap:16px}
+.step .n{font-family:var(--font-serif);font-style:italic;font-size:52px;color:var(--cobalt);line-height:.8}
+.step h3{font-size:27px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
+.step p{font-size:20px;line-height:1.45;color:var(--slate)}
+.step:nth-child(3),.step:nth-child(3) *{--x:0}
+.step.you{background:linear-gradient(180deg,#fff,#F4F7FF);border:2px solid rgba(30,72,212,.3)}
+.step-arrow{position:absolute;right:-17px;top:56px;z-index:2;color:var(--cobalt);font-size:26px;font-weight:800}
+.trust-banner{margin-top:30px;background:var(--ink);color:#fff;border-radius:22px;
+  padding:40px 48px;display:flex;align-items:center;gap:26px}
+.trust-banner .spark{width:44px;height:44px}
+.trust-banner p{font-family:var(--font-serif);font-size:46px;line-height:1.1}
+.trust-banner b{color:#8FB0FF;font-weight:500}
+
+/* ===========================================================
+   SLIDES 4-6 — CONNECTOR DEEP-DIVES
+   =========================================================== */
+.conns{display:grid;gap:28px;flex:1;align-content:center}
+.conns.two{grid-template-columns:1fr 1fr}
+.conns.three{grid-template-columns:repeat(3,1fr);gap:24px}
+.conn{background:#fff;border:1px solid var(--line);border-radius:22px;padding:36px 38px;
+  box-shadow:0 18px 44px rgba(14,21,36,.06);display:flex;flex-direction:column;position:relative;overflow:hidden}
+.conn .edge{position:absolute;left:0;top:0;bottom:0;width:6px}
+.conn .top{display:flex;align-items:center;gap:16px;margin-bottom:6px}
+.conn .logo{width:56px;height:56px;flex:none;display:grid;place-items:center}
+.conn .logo svg{width:100%;height:100%;display:block}
+.conn h3{font-size:31px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.conn .what{font-size:18px;color:var(--slate-2);font-weight:600;margin:2px 0 22px 70px}
+.conn .lab{font-family:var(--font-mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--cobalt-deep);margin-bottom:14px}
+.conn ul{list-style:none;display:flex;flex-direction:column;gap:13px}
+.conn li{font-size:21px;line-height:1.4;color:#26314A;padding-left:28px;position:relative}
+.conn li::before{content:"";position:absolute;left:4px;top:9px;width:11px;height:6px;
+  border-left:3px solid var(--cobalt);border-bottom:3px solid var(--cobalt);transform:rotate(-45deg)}
+.conn li b{color:var(--cobalt-deep);font-weight:700}
+/* compact variant for the 3-up slide */
+.conns.three .conn{padding:30px 28px}
+.conns.three h3{font-size:25px}
+.conns.three .logo{width:48px;height:48px}
+.conns.three .what{font-size:16px;margin-left:60px;margin-bottom:18px}
+.conns.three li{font-size:18px;gap:10px}
+.conns.three ul{gap:11px}
+
+/* ===========================================================
+   SLIDE 8 — CROSS-TOOL (inverted cobalt "wow")
+   =========================================================== */
+.slide.invert-slide{background:linear-gradient(200deg,#22308F 0%,#152A7A 55%,#0E1F5E 100%);color:#EAF0FF}
+.slide.invert-slide::before{opacity:.28;
+  background-image:linear-gradient(rgba(255,255,255,.1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.1) 1px,transparent 1px);
+  -webkit-mask-image:radial-gradient(1400px 1000px at 0% 100%,#000,transparent 72%);mask-image:radial-gradient(1400px 1000px at 0% 100%,#000,transparent 72%)}
+.invert-slide .sh-num{color:#8FB0FF}
+.invert-slide .sh-kick{color:#B9CCFF}
+.invert-slide .shead h2 em{color:#8FB0FF}
+.invert-slide .sh-rule{background:#8FB0FF}
+.invert-slide .foot{color:#9FB0D8}
+.invert-slide .foot .pill{color:#CFDCFF;background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.24)}
+.flow{display:flex;align-items:center;gap:0;margin:auto 0}
+.fl-stage{flex:1;display:flex;flex-direction:column;gap:14px;justify-content:center}
+.fl-card{background:rgba(255,255,255,.96);color:var(--ink);border-radius:16px;padding:22px 24px;
+  box-shadow:0 18px 44px rgba(0,0,0,.25)}
+.fl-card .k{font-family:var(--font-mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--cobalt-deep);margin-bottom:8px;display:flex;align-items:center;gap:9px}
+.fl-card .k i{width:11px;height:11px;border-radius:50%}
+.fl-card h4{font-size:24px;font-weight:800;letter-spacing:-.01em}
+.fl-card.solo{background:linear-gradient(160deg,#4E74F0,#2A54DE);color:#fff}
+.fl-card.solo .k{color:#DCE6FF}
+.fl-card.trigger{background:#EAF0FF;border:2px solid #8FB0FF}
+.fl-arrow{flex:none;width:88px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#8FB0FF;position:relative;z-index:3}
+.fl-arrow .a{font-size:34px;font-weight:800}
+.fl-arrow .cap{font-family:var(--font-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#B9CCFF;text-align:center;line-height:1.3}
+.punch{margin-top:30px;display:flex;align-items:center;gap:30px;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.16);border-radius:22px;padding:34px 44px}
+.punch .spark{width:44px;height:44px}
+.punch p{font-family:var(--font-serif);font-size:40px;line-height:1.18;color:#EAF0FF}
+.punch b{color:#fff;font-style:normal;font-weight:600}
+.punch em{color:#8FB0FF}
+
+/* ===========================================================
+   SLIDE 9 — 2x2 CAPABILITY CARDS
+   =========================================================== */
+.grid4{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:26px;flex:1}
+.cap{background:#fff;border:1px solid var(--line);border-radius:20px;padding:34px 38px;
+  display:flex;gap:26px;align-items:flex-start;box-shadow:0 16px 40px rgba(14,21,36,.05)}
+.cap .ic{width:64px;height:64px;border-radius:16px;flex:none;display:grid;place-items:center;
+  background:rgba(30,72,212,.1);color:var(--cobalt);font-size:30px;font-weight:800;font-family:var(--font-serif);font-style:italic}
+.cap h3{font-size:28px;font-weight:800;letter-spacing:-.01em;margin-bottom:10px}
+.cap p{font-size:22px;line-height:1.45;color:var(--slate)}
+.cap p b{color:var(--cobalt-deep)}
+
+/* ===========================================================
+   SLIDE 10 — LIVE WALKTHROUGH (app mock)
+   =========================================================== */
+.demo-wrap{flex:1;display:grid;grid-template-columns:1.35fr .8fr;gap:44px;align-items:center}
+.window{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 40px 90px rgba(14,21,36,.18);border:1px solid var(--line)}
+.win-bar{background:var(--paper-2);padding:16px 22px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line)}
+.win-bar .dot{width:14px;height:14px;border-radius:50%}
+.win-bar .url{margin-left:16px;font-family:var(--font-mono);font-size:15px;color:var(--slate-2);
+  background:#fff;border:1px solid var(--line);border-radius:8px;padding:7px 16px}
+.win-body{padding:34px 38px;display:flex;flex-direction:column;gap:16px;min-height:430px}
+.chat{display:flex;gap:14px;align-items:flex-start}
+.chat .av{width:38px;height:38px;border-radius:10px;flex:none;display:grid;place-items:center;font-weight:800;font-size:15px}
+.chat.me .av{background:var(--paper-3);color:var(--slate)}
+.chat.ai .av{background:var(--cobalt);color:#fff}
+.chat .bub{border-radius:14px;padding:16px 20px;font-size:20px;line-height:1.4;max-width:640px}
+.chat.me .bub{background:var(--paper-2);color:var(--ink)}
+.chat.ai .bub{background:#F1F5FF;color:var(--ink);border:1px solid rgba(30,72,212,.18)}
+.chat .bub b{color:var(--cobalt-deep)}
+.invoice-row{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--line);
+  border-radius:10px;padding:12px 16px;font-size:18px;margin-top:8px}
+.invoice-row .amt{font-weight:800}
+.invoice-row .st{font-family:var(--font-mono);font-size:13px;color:#B24;background:#FCE9EC;border-radius:6px;padding:4px 10px}
+.approve{display:flex;gap:12px;margin-top:6px}
+.btn{border-radius:10px;padding:12px 22px;font-weight:700;font-size:18px}
+.btn.primary{background:var(--cobalt);color:#fff}
+.btn.ghost{background:#fff;border:1px solid var(--line);color:var(--slate)}
+.demo-side h3{font-size:38px;font-weight:800;letter-spacing:-.02em;line-height:1.1;margin-bottom:20px}
+.demo-side h3 em{font-family:var(--font-serif);font-style:italic;font-weight:400;color:var(--cobalt)}
+.demo-side p{font-size:23px;line-height:1.55;color:var(--slate);margin-bottom:20px}
+.demo-side .note{font-family:var(--font-mono);font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:var(--cobalt-deep)}
+
+/* ===========================================================
+   SLIDE 11 — TURN IT ON (numbered)
+   =========================================================== */
+.turn{display:flex;flex-direction:column;gap:20px;flex:1;justify-content:center}
+.turn-row{display:flex;align-items:center;gap:30px;background:#fff;border:1px solid var(--line);
+  border-radius:18px;padding:26px 36px;box-shadow:0 14px 36px rgba(14,21,36,.05)}
+.turn-row .n{font-family:var(--font-serif);font-style:italic;font-size:56px;color:var(--cobalt);
+  width:80px;flex:none;line-height:.8;text-align:center}
+.turn-row .tx h3{font-size:28px;font-weight:800;letter-spacing:-.01em;margin-bottom:6px}
+.turn-row .tx p{font-size:21px;line-height:1.4;color:var(--slate)}
+.turn-row .tx p b{color:var(--cobalt-deep)}
+
+/* ===========================================================
+   SLIDE 12 — REASSURANCE (statement)
+   =========================================================== */
+.statement-slide{justify-content:center}
+.statement-slide .shead{margin-bottom:60px}
+.big-statement{font-size:78px;line-height:1.12;font-weight:800;letter-spacing:-.03em;max-width:1560px}
+.big-statement em{font-family:var(--font-serif);font-style:italic;font-weight:400;color:var(--cobalt)}
+.big-statement .u{border-bottom:6px solid rgba(30,72,212,.3)}
+
+/* ===========================================================
+   SLIDE 13 — DECISION (two paths)
+   =========================================================== */
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:34px;flex:1;align-content:center}
+.path{border-radius:24px;padding:52px 48px;display:flex;flex-direction:column;gap:20px;position:relative;overflow:hidden}
+.path.money{background:linear-gradient(160deg,#fff,#F4F7FF);border:2px solid rgba(30,72,212,.3);box-shadow:0 26px 60px rgba(30,72,212,.12)}
+.path.time{background:var(--ink);color:#fff}
+.path .cond{font-family:var(--font-serif);font-style:italic;font-size:34px;color:var(--cobalt)}
+.path.time .cond{color:#8FB0FF}
+.path h3{font-size:30px;font-weight:800;letter-spacing:-.01em}
+.path .opts{display:flex;flex-direction:column;gap:14px;margin-top:6px}
+.path .opt{display:flex;align-items:center;gap:16px;font-size:26px;font-weight:600}
+.path .opt .b{width:30px;height:30px;border-radius:9px;flex:none;display:grid;place-items:center;
+  background:var(--cobalt);color:#fff;font-size:16px;font-weight:800}
+.path.time .opt .b{background:#8FB0FF;color:var(--ink)}
+.path .big{position:absolute;right:34px;bottom:24px;font-family:var(--font-serif);font-style:italic;
+  font-size:130px;opacity:.1;line-height:.7}
+
+/* ===========================================================
+   SLIDE 17 — THANK YOU (simple)
+   =========================================================== */
+.thanks-slide{padding:0;align-items:center;justify-content:center;text-align:center;
+  background:linear-gradient(200deg,#2A54DE 0%,#1E48D4 46%,#12308F 100%);color:#EAF0FF}
+.thanks-slide::before{opacity:.4;
+  -webkit-mask-image:radial-gradient(1200px 900px at 50% 50%,#000,transparent 74%);
+          mask-image:radial-gradient(1200px 900px at 50% 50%,#000,transparent 74%);
+  background-image:linear-gradient(rgba(255,255,255,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.09) 1px,transparent 1px);
+  background-size:74px 74px}
+.thanks-glow{position:absolute;width:900px;height:900px;border-radius:50%;
+  background:radial-gradient(circle,rgba(126,156,255,.55),transparent 62%);z-index:0}
+.thanks-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:26px}
+.thanks-slide .spark{width:60px;height:60px}
+.thanks-slide h1{font-size:184px;font-weight:800;letter-spacing:-.04em;line-height:.9}
+.thanks-slide p{font-family:var(--font-serif);font-style:italic;font-size:42px;color:#B9CCFF}
+
+/* ===========================================================
+   NAV CHROME (fixed over viewport, does not scale)
+   =========================================================== */
+.progress{position:fixed;left:0;bottom:0;height:4px;background:var(--cobalt);z-index:9998;
+  transition:width .4s var(--ease);box-shadow:0 0 14px rgba(30,72,212,.6)}
+.counter{position:fixed;right:22px;bottom:16px;font-family:var(--font-mono);font-size:13px;
+  letter-spacing:.14em;color:#9FB0D8;z-index:9998}
+.hint{position:fixed;left:22px;bottom:14px;font-family:var(--font-mono);font-size:12px;letter-spacing:.12em;
+  color:#6B7B9E;z-index:9998}
+
+/* edit affordance */
+.edit-hotzone{position:fixed;top:0;left:0;width:80px;height:80px;z-index:10000;cursor:pointer}
+.edit-toggle{position:fixed;top:18px;left:18px;width:52px;height:52px;border-radius:14px;border:none;
+  background:var(--cobalt);color:#fff;font-size:22px;cursor:pointer;z-index:10001;opacity:0;pointer-events:none;
+  transition:opacity .3s ease;box-shadow:0 8px 24px rgba(30,72,212,.4)}
+.edit-toggle.show,.edit-toggle.active{opacity:1;pointer-events:auto}
+.edit-toggle.active{background:#0E7A3B}
+.editing [data-edit]{outline:2px dashed rgba(30,72,212,.5);outline-offset:5px;border-radius:4px;cursor:text}
+.edit-tip{position:fixed;top:20px;left:84px;background:var(--ink);color:#fff;font-size:14px;
+  padding:10px 16px;border-radius:10px;z-index:10001;opacity:0;transition:opacity .3s;pointer-events:none;font-weight:600}
+.edit-tip.show{opacity:1}
+
+/* ===========================================================
+   REDUCED MOTION
+   =========================================================== */
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.01ms !important;animation-duration:.01ms !important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="stage">
+
+  <!-- ========================= SLIDE 1 · TITLE ========================= -->
+  <section class="slide title-slide active">
+    <div class="ts-left">
+      <div class="ts-brand reveal d1"><span class="spark"></span><span data-edit>Claude for Small Business</span></div>
+      <div>
+        <h1 class="reveal d2" data-edit>What It <em>Actually</em> Does</h1>
+        <p class="ts-lead reveal d3" data-edit>A coworker that carries out multi-step work across the tools you already run — on a schedule, and always with your approval before anything sends.</p>
+      </div>
+      <div class="ts-tags reveal d4">
+        <span class="ts-tag">QuickBooks</span><span class="ts-tag">PayPal</span><span class="ts-tag">HubSpot</span>
+        <span class="ts-tag">Canva</span><span class="ts-tag">DocuSign</span><span class="ts-tag">Google Workspace</span><span class="ts-tag">Microsoft 365</span>
+      </div>
+    </div>
+    <div class="ts-right">
+      <div class="ts-glow"></div>
+      <div class="ts-badge reveal d3">Owner's Briefing · 15 min</div>
+      <div class="ts-rlabel">
+        <div class="big reveal d4" data-edit>It drafts.<br>You approve.<br>Nothing sends&nbsp;itself.</div>
+        <div class="sm reveal d5" data-edit>A plain-English walkthrough for small-business owners</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 2 · WHAT IT IS ========================= -->
+  <section class="slide">
+    <div class="shead reveal d1">
+      <div class="sh-num">02</div>
+      <div class="sh-txt"><div class="sh-kick">The one-minute version</div>
+        <h2 data-edit>What it <em>is</em></h2><div class="sh-rule"></div></div>
+    </div>
+    <div class="body">
+      <p class="lead-statement reveal d2" data-edit>Claude <em>Cowork</em> carries out multi-step tasks across your business tools and repeats them on a schedule — not just one question at a time.</p>
+      <div class="two-cards">
+        <div class="def-card reveal d3">
+          <div class="k">Cowork — the doer</div>
+          <h3 data-edit>It <span>does the work</span>, not just answers</h3>
+          <p data-edit>The version of Claude that executes multistep tasks across your tools and <b>repeats them automatically</b> on a schedule you set.</p>
+        </div>
+        <div class="def-card reveal d4">
+          <div class="k">Small Business — a toggle</div>
+          <h3 data-edit>One switch, <span>seven tools</span></h3>
+          <p data-edit>"Claude for Small Business" is a toggle inside Cowork that connects <b>QuickBooks, PayPal, HubSpot, Canva, DocuSign, Google Workspace, and Microsoft 365</b>.</p>
+        </div>
+      </div>
+      <p class="takeaway reveal d5" data-edit>That's the whole setup — <b>just enough for the rest of the deck to land.</b></p>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 3 · HUB & SPOKE ========================= -->
+  <section class="slide">
+    <div class="shead reveal d1">
+      <div class="sh-num">03</div>
+      <div class="sh-txt"><div class="sh-kick">The tools it plugs into</div>
+        <h2 data-edit>Software you <em>already</em> run</h2><div class="sh-rule"></div></div>
+    </div>
+    <div class="hub-wrap">
+      <!-- Hub-and-spoke: Claude center, 7 connectors around -->
+      <svg class="hub-svg" viewBox="0 0 900 900" aria-label="Claude connected to seven business tools">
+        <!-- connector lines -->
+        <g>
+          <line class="hub-line" x1="450" y1="450" x2="450" y2="150"/>
+          <line class="hub-line" x1="450" y1="450" x2="708" y2="244"/>
+          <line class="hub-line" x1="450" y1="450" x2="772" y2="523"/>
+          <line class="hub-line" x1="450" y1="450" x2="593" y2="747"/>
+          <line class="hub-line" x1="450" y1="450" x2="307" y2="747"/>
+          <line class="hub-line" x1="450" y1="450" x2="128" y2="523"/>
+          <line class="hub-line" x1="450" y1="450" x2="192" y2="244"/>
+        </g>
+        <!-- center -->
+        <g class="hub-node" style="transition-delay:.1s">
+          <circle cx="450" cy="450" r="104" fill="#1E48D4"/>
+          <circle cx="450" cy="450" r="104" fill="none" stroke="#7E9CFF" stroke-width="2" opacity=".5"/>
+          <circle cx="450" cy="416" r="17" fill="url(#sg)"/>
+          <text x="450" y="470" text-anchor="middle" fill="#fff" font-family="Manrope" font-weight="800" font-size="34">Claude</text>
+        </g>
+        <defs><radialGradient id="sg"><stop offset="0" stop-color="#CFE0FF"/><stop offset="1" stop-color="#7E9CFF"/></radialGradient></defs>
+        <!-- nodes -->
+        <g class="hub-node" style="transition-delay:.18s"><g transform="translate(450,150)"><rect x="-118" y="-38" width="236" height="76" rx="38" fill="#fff" stroke="#E8E1D2"/><circle cx="-82" cy="0" r="9" fill="#2CA01C"/><text x="14" y="8" text-anchor="middle" font-family="Manrope" font-weight="700" font-size="26" fill="#0E1524">QuickBooks</text></g></g>
+        <g class="hub-node" style="transition-delay:.26s"><g transform="translate(708,244)"><rect x="-100" y="-38" width="200" height="76" rx="38" fill="#fff" stroke="#E8E1D2"/><circle cx="-64" cy="0" r="9" fill="#0070BA"/><text x="18" y="8" text-anchor="middle" font-family="Manrope" font-weight="700" font-size="26" fill="#0E1524">PayPal</text></g></g>
+        <g class="hub-node" style="transition-delay:.34s"><g transform="translate(772,523)"><rect x="-100" y="-38" width="200" height="76" rx="38" fill="#fff" stroke="#E8E1D2"/><circle cx="-64" cy="0" r="9" fill="#FF7A59"/><text x="18" y="8" text-anchor="middle" font-family="Manrope" font-weight="700" font-size="26" fill="#0E1524">HubSpot</text></g></g>
+        <g class="hub-node" style="transition-delay:.42s"><g transform="translate(593,747)"><rect x="-84" y="-38" width="168" height="76" rx="38" fill="#fff" stroke="#E8E1D2"/><circle cx="-50" cy="0" r="9" fill="#00C4CC"/><text x="20" y="8" text-anchor="middle" font-family="Manrope" font-weight="700" font-size="26" fill="#0E1524">Canva</text></g></g>
+        <g class="hub-node" style="transition-delay:.50s"><g transform="translate(307,747)"><rect x="-104" y="-38" width="208" height="76" rx="38" fill="#fff" stroke="#E8E1D2"/><circle cx="-68" cy="0" r="9" fill="#C9A400"/><text x="16" y="8" text-anchor="middle" font-family="Manrope" font-weight="700" font-size="26" fill="#0E1524">DocuSign</text></g></g>
+        <g class="hub-node" style="transition-delay:.58s"><g transform="translate(128,523)"><rect x="-116" y="-38" width="232" height="76" rx="38" fill="#fff" stroke="#E8E1D2"/><circle cx="-84" cy="0" r="9" fill="#4285F4"/><text x="12" y="8" text-anchor="middle" font-family="Manrope" font-weight="700" font-size="24" fill="#0E1524">Google Workspace</text></g></g>
+        <g class="hub-node" style="transition-delay:.66s"><g transform="translate(192,244)"><rect x="-112" y="-38" width="224" height="76" rx="38" fill="#fff" stroke="#E8E1D2"/><circle cx="-80" cy="0" r="9" fill="#D83B01"/><text x="14" y="8" text-anchor="middle" font-family="Manrope" font-weight="700" font-size="25" fill="#0E1524">Microsoft 365</text></g></g>
+      </svg>
+      <div class="hub-side reveal d3">
+        <h3 data-edit>Claude sits in the <em>middle</em> of your stack</h3>
+        <p data-edit>One purpose for this slide: so the room recognizes the software they're already paying for and running every day.</p>
+        <div class="hub-legend">
+          <div><i style="background:#2CA01C"></i>Accounting &amp; payments</div>
+          <div><i style="background:#FF7A59"></i>Sales &amp; marketing (CRM)</div>
+          <div><i style="background:#4285F4"></i>Docs, email &amp; e-signature</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 4 · CONNECTORS — MONEY ========================= -->
+  <section class="slide">
+    <div class="shead reveal d1">
+      <div class="sh-num">04</div>
+      <div class="sh-txt"><div class="sh-kick">What each connection does · Money</div>
+        <h2 data-edit>Your books &amp; <em>your money</em></h2><div class="sh-rule"></div></div>
+    </div>
+    <div class="conns two">
+      <div class="conn reveal d2"><div class="edge" style="background:#2CA01C"></div>
+        <div class="top"><div class="logo"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="24" fill="#2CA01C"/><text x="24" y="33" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="22" fill="#fff">qb</text></svg></div><h3 data-edit>QuickBooks</h3></div>
+        <div class="what" data-edit>Accounting &amp; bookkeeping</div>
+        <div class="lab">Claude can</div>
+        <ul>
+          <li data-edit>Read invoices, bills, and your <b>P&amp;L</b> in real time</li>
+          <li data-edit>Reconcile accounts and flag <b>uncategorized or duplicate</b> entries</li>
+          <li data-edit>Pull year-to-date net income for <b>tax estimates</b></li>
+        </ul>
+      </div>
+      <div class="conn reveal d3"><div class="edge" style="background:#0070BA"></div>
+        <div class="top"><div class="logo"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><text x="21" y="36" font-family="Arial,Helvetica,sans-serif" font-style="italic" font-weight="800" font-size="30" fill="#009cde">P</text><text x="11" y="36" font-family="Arial,Helvetica,sans-serif" font-style="italic" font-weight="800" font-size="30" fill="#003087">P</text></svg></div><h3 data-edit>PayPal</h3></div>
+        <div class="what" data-edit>Payments &amp; disputes</div>
+        <div class="lab">Claude can</div>
+        <ul>
+          <li data-edit>Spot <b>overdue and unpaid</b> invoices</li>
+          <li data-edit>Draft and send <b>payment reminders</b> — with your approval</li>
+          <li data-edit>Surface disputes and issue <b>refunds</b>, only when you say so</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 5 · CONNECTORS — GROWTH ========================= -->
+  <section class="slide">
+    <div class="shead reveal d1">
+      <div class="sh-num">05</div>
+      <div class="sh-txt"><div class="sh-kick">What each connection does · Growth</div>
+        <h2 data-edit>Your pipeline &amp; <em>your brand</em></h2><div class="sh-rule"></div></div>
+    </div>
+    <div class="conns two">
+      <div class="conn reveal d2"><div class="edge" style="background:#FF7A59"></div>
+        <div class="top"><div class="logo"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><g stroke="#FF7A59" stroke-width="3"><line x1="24" y1="20" x2="24" y2="12"/><line x1="28" y1="27" x2="35" y2="32"/><line x1="20" y1="27" x2="13" y2="32"/></g><g fill="#FF7A59"><circle cx="24" cy="25" r="6"/><circle cx="24" cy="9" r="4"/><circle cx="37" cy="34" r="4"/><circle cx="11" cy="34" r="4"/></g></svg></div><h3 data-edit>HubSpot</h3></div>
+        <div class="what" data-edit>CRM &amp; marketing</div>
+        <div class="lab">Claude can</div>
+        <ul>
+          <li data-edit>Score and rank <b>inbound leads</b> by fit and urgency</li>
+          <li data-edit>Log calls, notes, and deal updates <b>so you don't</b></li>
+          <li data-edit>Read tickets to surface <b>what customers keep asking</b></li>
+        </ul>
+      </div>
+      <div class="conn reveal d3"><div class="edge" style="background:#00C4CC"></div>
+        <div class="top"><div class="logo"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="cvg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6420FF"/><stop offset=".55" stop-color="#00C4CC"/><stop offset="1" stop-color="#01F1C4"/></linearGradient></defs><circle cx="24" cy="24" r="24" fill="url(#cvg)"/><text x="24" y="34" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="28" fill="#fff">C</text></svg></div><h3 data-edit>Canva</h3></div>
+        <div class="what" data-edit>Design &amp; social posts</div>
+        <div class="lab">Claude can</div>
+        <ul>
+          <li data-edit>Turn an approved brief into <b>on-brand social posts</b></li>
+          <li data-edit>Draft captions and a <b>posting calendar</b></li>
+          <li data-edit>Keep every asset in <b>your colors and fonts</b></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 6 · CONNECTORS — ADMIN ========================= -->
+  <section class="slide">
+    <div class="shead reveal d1">
+      <div class="sh-num">06</div>
+      <div class="sh-txt"><div class="sh-kick">What each connection does · Admin</div>
+        <h2 data-edit>The <em>paperwork</em> layer</h2><div class="sh-rule"></div></div>
+    </div>
+    <div class="conns three">
+      <div class="conn reveal d2"><div class="edge" style="background:#C9A400"></div>
+        <div class="top"><div class="logo"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="10" fill="#D8B500"/><path d="M11 31 q3 -14 9 -11 q5 3 -1 7 q-7 3 1 5.5 q6 1.5 12 -5" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3 data-edit>DocuSign</h3></div>
+        <div class="what" data-edit>E-signature</div>
+        <div class="lab">Claude can</div>
+        <ul>
+          <li data-edit>Read contracts and <b>flag odd terms</b></li>
+          <li data-edit>Prep a <b>redline</b> for a first pass</li>
+          <li data-edit>Send agreements out to sign</li>
+        </ul>
+      </div>
+      <div class="conn reveal d3"><div class="edge" style="background:#4285F4"></div>
+        <div class="top"><div class="logo"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke-width="7"><path stroke="#EA4335" d="M24 8 A16 16 0 0 1 40 24"/><path stroke="#FBBC05" d="M24 8 A16 16 0 0 0 8 24"/><path stroke="#34A853" d="M8 24 A16 16 0 0 0 24 40"/><path stroke="#4285F4" d="M24 40 A16 16 0 0 0 40 24"/><path stroke="#4285F4" d="M40 24 L23 24"/></g></svg></div><h3 data-edit>Google Workspace</h3></div>
+        <div class="what" data-edit>Gmail · Docs · Calendar · Drive</div>
+        <div class="lab">Claude can</div>
+        <ul>
+          <li data-edit>Draft and <b>queue emails</b></li>
+          <li data-edit>Block time and <b>schedule follow-ups</b></li>
+          <li data-edit>Pull context from Docs &amp; Drive</li>
+        </ul>
+      </div>
+      <div class="conn reveal d4"><div class="edge" style="background:#D83B01"></div>
+        <div class="top"><div class="logo"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="16" height="16" fill="#F25022"/><rect x="26" y="6" width="16" height="16" fill="#7FBA00"/><rect x="6" y="26" width="16" height="16" fill="#00A4EF"/><rect x="26" y="26" width="16" height="16" fill="#FFB900"/></svg></div><h3 data-edit>Microsoft 365</h3></div>
+        <div class="what" data-edit>Outlook · Word · Excel · Teams</div>
+        <div class="lab">Claude can</div>
+        <ul>
+          <li data-edit>Same email, calendar &amp; docs</li>
+          <li data-edit>Build and update <b>spreadsheets</b></li>
+          <li data-edit>Work from files in OneDrive</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 7 · HOW A WORKFLOW RUNS ========================= -->
+  <section class="slide">
+    <div class="shead reveal d1">
+      <div class="sh-num">07</div>
+      <div class="sh-txt"><div class="sh-kick">How a workflow actually runs</div>
+        <h2 data-edit>Four steps, <em>every</em> time</h2><div class="sh-rule"></div></div>
+    </div>
+    <div class="body">
+      <div class="steps">
+        <div class="step reveal d2"><div class="n">1</div><h3 data-edit>Reads live data</h3><p data-edit>Pulls current numbers straight from a connected tool — not a stale export.</p><div class="step-arrow">→</div></div>
+        <div class="step reveal d3"><div class="n">2</div><h3 data-edit>Drafts the work</h3><p data-edit>Writes the email, the report, the reply, the forecast — ready to review.</p><div class="step-arrow">→</div></div>
+        <div class="step you reveal d4"><div class="n">3</div><h3 data-edit>You approve or edit</h3><p data-edit>Nothing moves until you say so. Change the tone, the numbers, anything.</p><div class="step-arrow">→</div></div>
+        <div class="step reveal d5"><div class="n">4</div><h3 data-edit>Sends, posts, or files</h3><p data-edit>Only then does it hit send, publish the post, or file the record.</p></div>
+      </div>
+      <div class="trust-banner reveal d6"><span class="spark"></span>
+        <p data-edit>It drafts. You approve. <b>Nothing sends itself.</b></p></div>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 5 · INVOICE CHASING & CASH FLOW ========================= -->
+  <section class="slide">
+    <div class="shead reveal d1">
+      <div class="sh-num">08</div>
+      <div class="sh-txt"><div class="sh-kick">Money · The pain everyone's felt</div>
+        <h2 data-edit>Invoice chasing &amp; <em>cash flow</em></h2><div class="sh-rule"></div></div>
+    </div>
+    <div class="body">
+      <div class="ba">
+        <div class="ba-card before reveal d2">
+          <div class="lab"><span class="badge">✕</span>Today</div>
+          <h3 data-edit>Manual, and always behind</h3>
+          <ul>
+            <li data-edit>Check QuickBooks and PayPal by hand for overdue invoices</li>
+            <li data-edit>Write reminder emails one by one</li>
+            <li data-edit>Guess at next month's cash position</li>
+          </ul>
+        </div>
+        <div class="ba-card after reveal d3">
+          <div class="lab"><span class="badge"></span>With Claude</div>
+          <h3 data-edit>Drafted, tone-matched, queued</h3>
+          <ul>
+            <li data-edit>Scans both tools and drafts reminders matched to each customer's <b>payment history</b></li>
+            <li data-edit><b>Gentle</b> for good payers, <b>firmer</b> for repeat-late ones</li>
+            <li data-edit>Queued for your approval before anything sends</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout reveal d4"><span class="tag">Goes further</span>
+        <p data-edit>It also builds a <b>30/60/90-day cash-flow forecast</b> from AR/AP and historical payment timing — with confidence bands and flagged risks. So <b>"will I make payroll?"</b> gets an actual answer, not a guess.</p></div>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 6 · MONTH-END CLOSE & TAX ========================= -->
+  <section class="slide">
+    <div class="shead reveal d1">
+      <div class="sh-num">09</div>
+      <div class="sh-txt"><div class="sh-kick">Money · The Sunday-night jobs</div>
+        <h2 data-edit>Month-end close &amp; <em>tax prep</em></h2><div class="sh-rule"></div></div>
+    </div>
+    <div class="body">
+      <div class="ba">
+        <div class="ba-card before reveal d2">
+          <div class="lab"><span class="badge">✕</span>Today</div>
+          <h3 data-edit>A weekend, every month</h3>
+          <ul>
+            <li data-edit>Reconcile QuickBooks against PayPal settlements by hand</li>
+            <li data-edit>Hope nothing's missing or double-counted</li>
+            <li data-edit>Scramble again when tax deadlines hit</li>
+          </ul>
+        </div>
+        <div class="ba-card after reveal d3">
+          <div class="lab"><span class="badge"></span>With Claude</div>
+          <h3 data-edit>Reconciled and explained</h3>
+          <ul>
+            <li data-edit>Reconciles automatically; flags <b>uncategorized transactions, duplicate charges, and missing receipts</b></li>
+            <li data-edit>Writes a plain-English <b>P&amp;L narrative</b></li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout reveal d4"><span class="tag">Same pattern at tax time</span>
+        <p data-edit>Calculates <b>quarterly estimated tax</b> from year-to-date net income — or scans for contractors paid over <b>$600</b> and flags missing <b>W-9s</b> ahead of 1099 season.</p></div>
+      <p class="takeaway reveal d5" data-edit>The stuff that always gets pushed to Sunday night — <b>done Monday morning instead.</b></p>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 7 · LEAD TRIAGE & CONTENT ========================= -->
+  <section class="slide">
+    <div class="shead reveal d1">
+      <div class="sh-num">10</div>
+      <div class="sh-txt"><div class="sh-kick">Time · Stop running on gut feel</div>
+        <h2 data-edit>Lead triage &amp; <em>content strategy</em></h2><div class="sh-rule"></div></div>
+    </div>
+    <div class="body">
+      <div class="ba">
+        <div class="ba-card before reveal d2">
+          <div class="lab"><span class="badge">✕</span>Today</div>
+          <h3 data-edit>Guesswork, twice over</h3>
+          <ul>
+            <li data-edit>Open HubSpot, scroll every lead, guess who's worth calling</li>
+            <li data-edit>Post whatever comes to mind, hope it moves product</li>
+          </ul>
+        </div>
+        <div class="ba-card after reveal d3">
+          <div class="lab"><span class="badge"></span>With Claude</div>
+          <h3 data-edit>Ranked, briefed, scheduled</h3>
+          <ul>
+            <li data-edit>Scores inbound leads by <b>engagement, fit, and urgency</b></li>
+            <li data-edit>Hands back a <b>"call these 5 today"</b> list — talking points drafted, calendar time blocked</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout reveal d4"><span class="tag">On the marketing side</span>
+        <p data-edit>It reads your sales data to spot <b>what's actually selling vs. what's sitting</b>, then turns it into a <b>30-day content brief</b>: what to push, what to discount, what to leave alone.</p></div>
+      <p class="takeaway reveal d5" data-edit>Most owners are doing <b>both of these on gut feel</b> right now.</p>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 8 · CROSS-TOOL (WOW) ========================= -->
+  <section class="slide invert-slide">
+    <div class="shead reveal d1">
+      <div class="sh-num">11</div>
+      <div class="sh-txt"><div class="sh-kick">The cross-tool moment</div>
+        <h2 data-edit>When tools <em>talk to each other</em></h2><div class="sh-rule"></div></div>
+    </div>
+    <div class="body">
+      <div class="flow">
+        <div class="fl-stage reveal d2">
+          <div class="fl-card"><div class="k"><i style="background:#2CA01C"></i>QuickBooks</div><h4>Revenue</h4></div>
+          <div class="fl-card"><div class="k"><i style="background:#FF7A59"></i>HubSpot</div><h4>Ad performance</h4></div>
+        </div>
+        <div class="fl-arrow reveal d3"><div class="a">→</div><div class="cap">pulled together</div></div>
+        <div class="fl-stage reveal d4"><div class="fl-card solo"><div class="k">Automatic · recurring</div><h4>Slack summary</h4></div></div>
+        <div class="fl-arrow reveal d5"><div class="a">→</div><div class="cap">sees a slowdown</div></div>
+        <div class="fl-stage reveal d6"><div class="fl-card trigger"><div class="k"><i style="background:#1E48D4"></i>On its own</div><h4>Triggers a marketing campaign</h4></div></div>
+      </div>
+      <div class="punch reveal d7"><span class="spark"></span>
+        <p data-edit>A <b>chatbot</b> waits for you to ask. A <em>coworker</em> watches — and flags things for you.</p></div>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 9 · SERVICE, CONTRACTS, HIRING ========================= -->
+  <section class="slide">
+    <div class="shead reveal d1">
+      <div class="sh-num">12</div>
+      <div class="sh-txt"><div class="sh-kick">Four more, one line each</div>
+        <h2 data-edit>Service, contracts &amp; <em>hiring</em></h2><div class="sh-rule"></div></div>
+    </div>
+    <div class="grid4">
+      <div class="cap reveal d2"><div class="ic">P</div><div><h3 data-edit>Customer pulse</h3><p data-edit>Pulls PayPal disputes, HubSpot tickets, and reviews into one report: <b>"fix these three things first."</b></p></div></div>
+      <div class="cap reveal d3"><div class="ic">T</div><div><h3 data-edit>Ticket response</h3><p data-edit>Drafts a tone-matched reply and can issue a PayPal refund — <b>only with your approval first.</b></p></div></div>
+      <div class="cap reveal d4"><div class="ic">C</div><div><h3 data-edit>Contracts</h3><p data-edit>Reads an NDA or vendor agreement, flags non-standard terms in plain English, produces a <b>redline</b> — no lawyer for a first pass.</p></div></div>
+      <div class="cap reveal d5"><div class="ic">H</div><div><h3 data-edit>Hiring</h3><p data-edit>Turns a rough brief into a <b>job post, interview guide with a rubric, and offer-letter template.</b></p></div></div>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 10 · LIVE WALKTHROUGH ========================= -->
+  <section class="slide">
+    <div class="shead reveal d1">
+      <div class="sh-num">13</div>
+      <div class="sh-txt"><div class="sh-kick">Live walkthrough</div>
+        <h2 data-edit>One workflow, <em>end to end</em></h2><div class="sh-rule"></div></div>
+    </div>
+    <div class="demo-wrap">
+      <div class="window reveal d2">
+        <div class="win-bar"><span class="dot" style="background:#FF5F57"></span><span class="dot" style="background:#FEBC2E"></span><span class="dot" style="background:#28C840"></span>
+          <span class="url">claude.ai/cowork · invoice-chasing</span></div>
+        <div class="win-body">
+          <div class="chat me"><div class="av">You</div><div class="bub">Chase everyone overdue in QuickBooks and PayPal.</div></div>
+          <div class="chat ai"><div class="av"><span class="spark" style="width:20px;height:20px"></span></div><div class="bub">Found <b>3 overdue invoices</b>. Drafts ready for your approval:
+            <div class="invoice-row"><span>Rivera Landscaping · 22 days</span><span class="amt">$1,450</span><span class="st">OVERDUE</span></div>
+            <div class="invoice-row"><span>Delgado Cafe · 8 days</span><span class="amt">$680</span><span class="st">OVERDUE</span></div>
+          </div></div>
+          <div class="approve"><button class="btn primary">Approve &amp; send</button><button class="btn ghost">Edit tone</button></div>
+        </div>
+      </div>
+      <div class="demo-side reveal d3">
+        <h3 data-edit>Show it, <em>don't</em> tell it</h3>
+        <p data-edit>Invoice chasing or the cash-flow forecast both demo well — the before/after is obvious to a non-technical audience.</p>
+        <p data-edit>For a tight 15-minute slot, a <b>screen recording</b> beats a live demo: no loading, no surprises.</p>
+        <div class="note">▶ Play the recording here</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 11 · TURN IT ON ========================= -->
+  <section class="slide">
+    <div class="shead reveal d1">
+      <div class="sh-num">14</div>
+      <div class="sh-txt"><div class="sh-kick">How to actually turn this on</div>
+        <h2 data-edit>Start <em>small</em>, start today</h2><div class="sh-rule"></div></div>
+    </div>
+    <div class="turn">
+      <div class="turn-row reveal d2"><div class="n">1</div><div class="tx"><h3 data-edit>Flip the toggle</h3><p data-edit>On a <b>paid Claude plan</b>, open Cowork and turn on the "Claude for Small Business" toggle.</p></div></div>
+      <div class="turn-row reveal d3"><div class="n">2</div><div class="tx"><h3 data-edit>Connect one tool first</h3><p data-edit>Don't wire up all seven on day one. <b>Start with the one</b> tied to your biggest headache.</p></div></div>
+      <div class="turn-row reveal d4"><div class="n">3</div><div class="tx"><h3 data-edit>Run it on historical data</h3><p data-edit>Pick one workflow and run it once on <b>closed or past data</b> before trusting it live.</p></div></div>
+      <div class="turn-row reveal d5"><div class="n">4</div><div class="tx"><h3 data-edit>Set your approvals</h3><p data-edit>Set approval preferences so <b>nothing sends without your sign-off.</b></p></div></div>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 12 · REASSURANCE ========================= -->
+  <section class="slide statement-slide">
+    <div class="shead reveal d1">
+      <div class="sh-num">15</div>
+      <div class="sh-txt"><div class="sh-kick">What it can't do without you</div>
+        <h2 data-edit>The <em>guardrails</em></h2><div class="sh-rule"></div></div>
+    </div>
+    <div class="big-statement reveal d2" data-edit>It can't touch anything you <span class="u">can't already touch</span> in the source system — and it never <em>sends, posts, or pays</em> without your approval.</div>
+  </section>
+
+  <!-- ========================= SLIDE 13 · DECISION ========================= -->
+  <section class="slide">
+    <div class="shead reveal d1">
+      <div class="sh-num">16</div>
+      <div class="sh-txt"><div class="sh-kick">Pick your first workflow</div>
+        <h2 data-edit>One rule to <em>leave with</em></h2><div class="sh-rule"></div></div>
+    </div>
+    <div class="paths">
+      <div class="path money reveal d2">
+        <div class="cond" data-edit>If money is the pain…</div>
+        <h3 data-edit>Start here</h3>
+        <div class="opts">
+          <div class="opt"><span class="b">✓</span><span data-edit>Invoice chasing</span></div>
+          <div class="opt"><span class="b">✓</span><span data-edit>Cash-flow forecast</span></div>
+        </div>
+        <div class="big">$</div>
+      </div>
+      <div class="path time reveal d3">
+        <div class="cond" data-edit>If time is the pain…</div>
+        <h3 data-edit>Start here</h3>
+        <div class="opts">
+          <div class="opt"><span class="b">✓</span><span data-edit>Lead triage</span></div>
+          <div class="opt"><span class="b">✓</span><span data-edit>Customer pulse</span></div>
+        </div>
+        <div class="big">⏱</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 17 · THANK YOU ========================= -->
+  <section class="slide thanks-slide">
+    <div class="thanks-glow"></div>
+    <div class="thanks-inner">
+      <div class="reveal d1"><span class="spark"></span></div>
+      <h1 class="reveal d2" data-edit>Thank you</h1>
+      <p class="reveal d3" data-edit>Claude for Small Business</p>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<!-- nav chrome -->
+<div class="progress" id="progress"></div>
+<div class="counter" id="counter">01 / 17</div>
+<div class="hint">← → or SPACE to navigate · E to edit</div>
+
+<!-- edit affordance -->
+<div class="edit-hotzone" id="hotzone"></div>
+<button class="edit-toggle" id="editToggle" title="Edit mode (E)">✏️</button>
+<div class="edit-tip" id="editTip">Edit mode — click text · Ctrl+S to save · Esc to exit</div>
+
+<script>
+/* ===========================================================
+   SLIDE CONTROLLER — stage scaling + navigation
+   =========================================================== */
+class Deck{
+  constructor(){
+    this.stage=document.getElementById('stage');
+    this.slides=[...document.querySelectorAll('.slide')];
+    this.i=0;
+    this.progress=document.getElementById('progress');
+    this.counter=document.getElementById('counter');
+    this.fit();addEventListener('resize',()=>this.fit());
+    this.nav();this.show(0);
+  }
+  fit(){
+    const f=Math.min(innerWidth/1920,innerHeight/1080);
+    const x=(innerWidth-1920*f)/2, y=(innerHeight-1080*f)/2;
+    this.stage.style.transform=`translate(${x}px,${y}px) scale(${f})`;
+  }
+  show(n){
+    this.i=Math.max(0,Math.min(n,this.slides.length-1));
+    this.slides.forEach((s,k)=>s.classList.toggle('active',k===this.i));
+    const pad=v=>String(v).padStart(2,'0');
+    this.counter.textContent=`${pad(this.i+1)} / ${pad(this.slides.length)}`;
+    this.progress.style.width=`${(this.i+1)/this.slides.length*100}%`;
+  }
+  next(){this.show(this.i+1)} prev(){this.show(this.i-1)}
+  nav(){
+    addEventListener('keydown',e=>{
+      if(document.body.classList.contains('editing') && e.key!=='Escape') return;
+      if(['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)){e.preventDefault();this.next();}
+      if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();this.prev();}
+      if(e.key==='Home')this.show(0); if(e.key==='End')this.show(this.slides.length-1);
+    });
+    let wheelLock=false;
+    addEventListener('wheel',e=>{
+      if(document.body.classList.contains('editing'))return;
+      if(wheelLock)return; if(Math.abs(e.deltaY)<24)return;
+      wheelLock=true; e.deltaY>0?this.next():this.prev();
+      setTimeout(()=>wheelLock=false,700);
+    },{passive:true});
+    let x0=null;
+    addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});
+    addEventListener('touchend',e=>{
+      if(x0===null)return; const dx=e.changedTouches[0].clientX-x0;
+      if(Math.abs(dx)>60)dx<0?this.next():this.prev(); x0=null;
+    },{passive:true});
+  }
+}
+const deck=new Deck();
+
+/* ===========================================================
+   INLINE EDITING — hotzone hover (400ms grace) + E key
+   Saves the whole stage to localStorage.
+   =========================================================== */
+const editor={
+  isActive:false,
+  key:'claude-smb-deck-v2',
+  els(){return [...document.querySelectorAll('[data-edit]')]},
+  toggle(){
+    this.isActive=!this.isActive;
+    document.body.classList.toggle('editing',this.isActive);
+    document.getElementById('editToggle').classList.toggle('active',this.isActive);
+    document.getElementById('editTip').classList.toggle('show',this.isActive);
+    this.els().forEach(el=>el.contentEditable=this.isActive);
+    if(!this.isActive){document.getElementById('editToggle').classList.remove('show');}
+  },
+  save(){
+    const data={}; this.els().forEach((el,k)=>data[k]=el.innerHTML);
+    localStorage.setItem(this.key,JSON.stringify(data));
+    const t=document.getElementById('editTip');
+    t.textContent='Saved ✓'; t.classList.add('show');
+    setTimeout(()=>{t.textContent='Edit mode — click text · Ctrl+S to save · Esc to exit';
+      if(!this.isActive)t.classList.remove('show');},1200);
+  },
+  load(){
+    const raw=localStorage.getItem(this.key); if(!raw)return;
+    try{const data=JSON.parse(raw); this.els().forEach((el,k)=>{if(data[k]!==undefined)el.innerHTML=data[k];});}catch(e){}
+  }
+};
+editor.load();
+
+const hotzone=document.getElementById('hotzone');
+const editToggle=document.getElementById('editToggle');
+let hideT=null;
+hotzone.addEventListener('mouseenter',()=>{clearTimeout(hideT);editToggle.classList.add('show');});
+hotzone.addEventListener('mouseleave',()=>{hideT=setTimeout(()=>{if(!editor.isActive)editToggle.classList.remove('show');},400);});
+editToggle.addEventListener('mouseenter',()=>clearTimeout(hideT));
+editToggle.addEventListener('mouseleave',()=>{hideT=setTimeout(()=>{if(!editor.isActive)editToggle.classList.remove('show');},400);});
+editToggle.addEventListener('click',()=>editor.toggle());
+hotzone.addEventListener('click',()=>editor.toggle());
+document.addEventListener('keydown',e=>{
+  if((e.key==='e'||e.key==='E')&&!e.target.getAttribute('contenteditable')){editor.toggle();}
+  if(e.key==='Escape'&&editor.isActive){editor.toggle();}
+  if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();editor.save();}
+});
+</script>
+</body>
+</html>
