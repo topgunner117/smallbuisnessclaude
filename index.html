@@ -412,6 +412,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0b1020;font-family:
 .dm-model{color:#E8E5DC;font-weight:700}
 .dm-eff{color:#9A978E}
 .dm-mic svg{width:26px;height:26px;display:block}
+/* send button — appears when typing finishes (.ready); the demo
+   waits for a real click (or Enter) before the conversation plays */
+.dm-send{width:42px;height:42px;border-radius:50%;background:#D97757;display:grid;place-items:center;
+  flex:none;cursor:pointer;opacity:0;transform:scale(.6);pointer-events:none;
+  transition:opacity .3s var(--ease),transform .3s var(--ease)}
+.dm-send svg{width:20px;height:20px;display:block}
+.ready .dm-send{opacity:1;transform:scale(1);pointer-events:auto;animation:dmpulse 1.6s ease infinite}
+.ready .dm-send:hover{transform:scale(1.1)}
+.chatting .dm-send{opacity:0;pointer-events:none;animation:none}
+@keyframes dmpulse{0%,100%{box-shadow:0 0 0 0 rgba(217,119,87,.45)}50%{box-shadow:0 0 0 14px rgba(217,119,87,0)}}
 .dm-foot{display:flex;align-items:center;gap:26px;padding:15px 26px;border-top:1px solid #3B3934;
   font-size:19px;color:#9A978E;background:#2B2A27}
 .dm-foot .fi{display:flex;align-items:center;gap:10px}
@@ -1013,6 +1023,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0b1020;font-family:
           <span class="sp"></span>
           <span class="dm-model">Sonnet 5</span><span class="dm-eff">High ⌄</span>
           <span class="dm-mic"><svg viewBox="0 0 24 24" fill="none" stroke="#C9C6BC" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+          <span class="dm-send" title="Send"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></span>
         </div>
         <div class="dm-foot">
           <span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="#9A978E" stroke-width="1.8"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Project or folder ⌄</span>
@@ -1082,6 +1093,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0b1020;font-family:
           <span class="sp"></span>
           <span class="dm-model">Sonnet 5</span><span class="dm-eff">High ⌄</span>
           <span class="dm-mic"><svg viewBox="0 0 24 24" fill="none" stroke="#C9C6BC" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+          <span class="dm-send" title="Send"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></span>
         </div>
         <div class="dm-foot">
           <span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="#9A978E" stroke-width="1.8"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Project or folder ⌄</span>
@@ -1145,6 +1157,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0b1020;font-family:
           <span class="sp"></span>
           <span class="dm-model">Sonnet 5</span><span class="dm-eff">High ⌄</span>
           <span class="dm-mic"><svg viewBox="0 0 24 24" fill="none" stroke="#C9C6BC" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+          <span class="dm-send" title="Send"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></span>
         </div>
         <div class="dm-foot">
           <span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="#9A978E" stroke-width="1.8"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Project or folder ⌄</span>
@@ -1217,6 +1230,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0b1020;font-family:
           <span class="sp"></span>
           <span class="dm-model">Sonnet 5</span><span class="dm-eff">High ⌄</span>
           <span class="dm-mic"><svg viewBox="0 0 24 24" fill="none" stroke="#C9C6BC" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+          <span class="dm-send" title="Send"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></span>
         </div>
         <div class="dm-foot">
           <span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="#9A978E" stroke-width="1.8"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Project or folder ⌄</span>
@@ -1285,6 +1299,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0b1020;font-family:
           <span class="sp"></span>
           <span class="dm-model">Sonnet 5</span><span class="dm-eff">High ⌄</span>
           <span class="dm-mic"><svg viewBox="0 0 24 24" fill="none" stroke="#C9C6BC" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+          <span class="dm-send" title="Send"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></span>
         </div>
         <div class="dm-foot">
           <span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="#9A978E" stroke-width="1.8"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Project or folder ⌄</span>
@@ -1347,6 +1362,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0b1020;font-family:
           <span class="sp"></span>
           <span class="dm-model">Sonnet 5</span><span class="dm-eff">High ⌄</span>
           <span class="dm-mic"><svg viewBox="0 0 24 24" fill="none" stroke="#C9C6BC" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+          <span class="dm-send" title="Send"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></span>
         </div>
         <div class="dm-foot">
           <span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="#9A978E" stroke-width="1.8"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Project or folder ⌄</span>
@@ -1470,16 +1486,17 @@ class Deck{
    DEMO PLAYER — replays the Claude-app animation whenever a
    .demo-slide becomes active. Timeline: after 800ms the prompt
    from data-prompt types into the input (.typing), then the
-   slide flips to .chatting and every [data-t] element gains
-   .on at its offset; tool cards gain .done at data-done.
-   Leaving the slide cancels all timers and resets state.
+   send button appears (.ready) and the demo WAITS — clicking it
+   (or pressing Enter) flips the slide to .chatting and every
+   [data-t] element gains .on at its offset; tool cards gain
+   .done at data-done. Leaving the slide cancels timers + resets.
    =========================================================== */
 const demoPlayer={
   timers:[],
   clear(){this.timers.forEach(clearTimeout);this.timers=[];},
   wait(fn,ms){this.timers.push(setTimeout(fn,ms));},
   reset(s){
-    s.classList.remove('typing','chatting');
+    s.classList.remove('typing','ready','chatting');
     s.querySelectorAll('.on').forEach(el=>el.classList.remove('on'));
     s.querySelectorAll('.done').forEach(el=>el.classList.remove('done'));
     const t=s.querySelector('.dm-typed'); if(t)t.textContent='';
@@ -1501,10 +1518,17 @@ const demoPlayer={
         const n=Math.min(text.length,Math.floor((performance.now()-t0)/30));
         out.textContent=text.slice(0,n);
         if(n<text.length)this.wait(tick,30);
-        else this.wait(()=>this.chat(s),650);
+        /* typing done → reveal the send button and WAIT for the
+           presenter to click it (or press Enter) */
+        else this.wait(()=>s.classList.add('ready'),250);
       };
       tick();
     },800);
+  },
+  send(s){
+    if(!s.classList.contains('ready')||s.classList.contains('chatting'))return;
+    s.classList.remove('ready');
+    this.chat(s);
   },
   chat(s){
     s.classList.add('chatting');
@@ -1516,6 +1540,21 @@ const demoPlayer={
 };
 
 const deck=new Deck();
+
+/* send-button wiring: click the coral button — or press Enter —
+   to submit the typed prompt and let the conversation play */
+document.querySelectorAll('.dm-send').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const s=btn.closest('.demo-slide');
+    if(s)demoPlayer.send(s);
+  });
+});
+addEventListener('keydown',e=>{
+  if(e.key!=='Enter')return;
+  if(document.body.classList.contains('editing')||e.target.getAttribute('contenteditable'))return;
+  const s=deck.slides[deck.i];
+  if(s.classList.contains('demo-slide')){e.preventDefault();demoPlayer.send(s);}
+});
 
 /* ===========================================================
    INLINE EDITING — hotzone hover (400ms grace) + E key
