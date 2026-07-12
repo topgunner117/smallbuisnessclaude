@@ -376,6 +376,125 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0b1020;font-family:
 .thanks-slide p{font-family:var(--font-serif);font-style:italic;font-size:42px;color:#B9CCFF}
 
 /* ===========================================================
+   SLIDES 17–19 — LIVE DEMOS (Claude-app replica, dark mode)
+   demoPlayer JS drives the timeline: prompt types into the
+   input (.typing), home fades to conversation (.chatting),
+   each .dm-step gains .on at its data-t ms, tool cards flip
+   to .done at data-done ms.
+   =========================================================== */
+.demo-slide{padding:0;background:#262624;color:#ECEAE2}
+.demo-slide::before{display:none}
+.dm-tag{position:absolute;top:42px;left:56px;z-index:5;font-family:var(--font-mono);
+  font-size:16px;letter-spacing:.22em;color:#8FB0FF;text-transform:uppercase}
+.dm-tag b{color:#D97757}
+
+/* ---- HOME STATE (greeting + input card + ideas) ---- */
+.dm-home{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;transition:opacity .4s ease}
+.chatting .dm-home{opacity:0;pointer-events:none}
+.dm-greet{display:flex;align-items:center;gap:20px;font-family:var(--font-serif);font-weight:400;
+  font-size:64px;color:#E8E5DC;margin-bottom:44px}
+.dm-greet svg{width:50px;height:50px}
+.dm-col{width:1000px}
+.dm-card{background:#30302E;border:1px solid #413F3B;border-radius:18px;overflow:hidden;
+  box-shadow:0 18px 50px rgba(0,0,0,.35)}
+.dm-type{position:relative;padding:28px 30px 10px;min-height:100px;font-size:29px;line-height:1.45;color:#E8E5DC}
+.dm-ph{position:absolute;top:28px;left:30px;color:#807D74;transition:opacity .2s}
+.typing .dm-ph,.chatting .dm-ph{opacity:0}
+.dm-caret{display:inline-block;width:3px;height:32px;background:#C9C6BC;vertical-align:-5px;
+  margin-left:2px;animation:dmblink 1s steps(1) infinite}
+@keyframes dmblink{50%{opacity:0}}
+.dm-ctrl{display:flex;align-items:center;gap:14px;padding:0 24px 18px;font-size:21px;color:#9A978E}
+.dm-plus{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:26px;color:#C9C6BC}
+.dm-pill{padding:8px 20px;border-radius:999px;font-weight:600;font-size:20px}
+.dm-pill.sel{background:#4A4945;color:#F0EEE6}
+.dm-ctrl .sp,.dm-foot .sp{flex:1}
+.dm-model{color:#E8E5DC;font-weight:700}
+.dm-eff{color:#9A978E}
+.dm-mic svg{width:26px;height:26px;display:block}
+.dm-foot{display:flex;align-items:center;gap:26px;padding:15px 26px;border-top:1px solid #3B3934;
+  font-size:19px;color:#9A978E;background:#2B2A27}
+.dm-foot .fi{display:flex;align-items:center;gap:10px}
+.dm-foot svg{width:21px;height:21px}
+.dm-ideas{width:1000px;margin-top:44px}
+.dm-ideas .lab{font-size:18px;color:#807D74;margin-bottom:14px}
+.dm-idea{display:flex;align-items:center;gap:18px;padding:11px 4px;font-size:23px;font-weight:600;color:#DEDBD2}
+.dm-idea .ic{width:44px;height:33px;border-radius:7px;flex:none;
+  background:linear-gradient(150deg,#454239,#35332E);border:1px solid #45433D}
+
+/* ---- CONVERSATION STATE ---- */
+.dm-chat{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+  padding:60px 0 26px;opacity:0;transition:opacity .45s ease .15s;pointer-events:none}
+.chatting .dm-chat{opacity:1;pointer-events:auto}
+.dm-topbar{display:flex;align-items:center;gap:12px;font-size:20px;color:#B5B2A8;margin-bottom:28px}
+.dm-topbar svg{width:20px;height:20px}
+.dm-thread{width:1220px;flex:1;display:flex;flex-direction:column;gap:18px;min-height:0}
+.dm-step{opacity:0;transform:translateY(16px);
+  transition:opacity .5s var(--ease),transform .5s var(--ease)}
+.dm-step.on{opacity:1;transform:none}
+.dm-user{align-self:flex-end;max-width:76%;background:#393732;border:1px solid #45433D;
+  border-radius:20px 20px 6px 20px;padding:17px 26px;font-size:24px;line-height:1.5;color:#EFEDE5}
+.dm-tool{display:flex;align-items:center;gap:16px;background:#2C2B28;border:1px solid #3D3B36;
+  border-radius:14px;padding:13px 22px;font-size:22px;color:#C9C6BC;width:fit-content;max-width:100%}
+.dm-tool .ic{width:34px;height:34px;flex:none}
+.dm-tool .ic svg{width:100%;height:100%;display:block}
+.dm-tool b{color:#EDEAE1;font-weight:700}
+.dm-spin{width:20px;height:20px;border-radius:50%;border:3px solid #55534C;border-top-color:#D97757;
+  animation:dmspin .8s linear infinite;flex:none}
+@keyframes dmspin{to{transform:rotate(360deg)}}
+.dm-res{display:none;align-items:center;gap:9px;color:#93C99B;font-weight:700;white-space:nowrap}
+.dm-res::before{content:"✓";font-weight:800}
+.dm-tool.done .dm-spin{display:none}
+.dm-tool.done .dm-res{display:flex}
+/* answer = coral spark + serif text (like real Claude responses) */
+.dm-ans{display:flex;gap:20px}
+.dm-ans .astar{flex:none;width:32px;height:32px;margin-top:5px}
+.dm-ans .txt{font-family:var(--font-serif);font-size:26px;line-height:1.5;color:#EDEAE1}
+.dm-ans .txt b{color:#fff;font-weight:600}
+/* result table */
+.dm-twrap{border:1px solid #3D3B36;border-radius:14px;overflow:hidden;background:#2C2B28}
+.dm-table{width:100%;border-collapse:collapse;font-size:22px}
+.dm-table th{font-family:var(--font-mono);font-size:14px;letter-spacing:.18em;text-transform:uppercase;
+  color:#8A8880;text-align:left;padding:13px 24px;border-bottom:1px solid #3D3B36;font-weight:700}
+.dm-table td{padding:12px 24px;border-bottom:1px solid #34322E;color:#DEDBD2}
+.dm-table tr:last-child td{border-bottom:none}
+.dm-table .r{text-align:right}
+.dm-table .mono{font-family:var(--font-mono);font-size:20px;color:#EDEAE1}
+.chip{display:inline-block;padding:3px 14px;border-radius:999px;font-size:17px;font-weight:700}
+.chip.warn{background:rgba(224,164,88,.16);color:#E0A458}
+.chip.hot{background:rgba(229,115,92,.16);color:#E5735C}
+/* ranked lead rows */
+.dm-lead{display:flex;align-items:center;gap:20px;background:#2C2B28;border:1px solid #3D3B36;
+  border-radius:14px;padding:14px 24px;font-size:23px}
+.dm-lead .rk{font-family:var(--font-serif);font-style:italic;font-size:29px;color:#D97757;width:28px;flex:none}
+.dm-lead b{color:#F0EEE6}
+.dm-lead .note{color:#9A978E;font-size:20px}
+.dm-lead .amt{margin-left:auto;font-family:var(--font-mono);font-size:21px;color:#EDEAE1;white-space:nowrap}
+/* briefing preview card */
+.dm-brief{background:#2C2B28;border:1px solid #3D3B36;border-radius:16px;overflow:hidden}
+.dm-brief .bh{display:flex;align-items:center;gap:14px;padding:14px 26px;background:#31302C;
+  border-bottom:1px solid #3D3B36;font-family:var(--font-mono);font-size:15px;letter-spacing:.2em;color:#8FB0FF}
+.dm-brow{display:flex;align-items:center;gap:16px;padding:13px 26px;font-size:23px;color:#DEDBD2;border-bottom:1px solid #34322E}
+.dm-brow:last-child{border-bottom:none}
+.dm-brow .dot{width:12px;height:12px;border-radius:50%;flex:none}
+.dm-brow .v{margin-left:auto;font-family:var(--font-mono);font-size:21px;color:#fff;white-space:nowrap}
+.dm-brow .v.up{color:#93C99B}.dm-brow .v.dn{color:#E5735C}
+/* approval / schedule banners */
+.dm-approve{display:flex;align-items:center;gap:16px;background:rgba(217,119,87,.1);
+  border:1px solid rgba(217,119,87,.4);border-radius:14px;padding:14px 24px;font-size:22px;color:#E9B29C;font-weight:600}
+.dm-approve b{color:#F3CDBB}
+.dm-approve svg{flex:none}
+.dm-sched{display:flex;align-items:center;gap:16px;background:rgba(147,201,155,.08);
+  border:1px solid rgba(147,201,155,.35);border-radius:14px;padding:14px 24px;font-size:22px;color:#A9D4AF;font-weight:600}
+.dm-sched b{color:#CBE8CF}
+.dm-sched svg{flex:none}
+/* reply bar pinned to the bottom of the thread */
+.dm-reply{margin-top:auto;background:#30302E;border:1px solid #413F3B;border-radius:14px;
+  padding:15px 24px;font-size:21px;color:#807D74;display:flex;align-items:center;gap:14px}
+.dm-reply .sp{flex:1}
+.dm-reply .m{color:#B5B2A8;font-weight:600;font-size:19px}
+
+/* ===========================================================
    NAV CHROME (fixed over viewport, does not scale)
    =========================================================== */
 .progress{position:fixed;left:0;bottom:0;height:4px;background:var(--cobalt);z-index:9998;
@@ -848,7 +967,208 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0b1020;font-family:
     </div>
   </section>
 
-  <!-- ========================= SLIDE 17 · THANK YOU ========================= -->
+  <!-- ========================= SLIDES 17–19 · LIVE DEMOS =========================
+       Claude-app replica (dark mode, matches the real interface).
+       The prompt in data-prompt is typed into the input by demoPlayer,
+       then the conversation plays out step by step. No data-edit inside
+       (animated content), so saved edits keep their slots. -->
+
+  <!-- DEMO 1 · MONEY — chase overdue invoices -->
+  <section class="slide demo-slide" data-prompt="Go through QuickBooks and find every invoice more than 2 weeks overdue, then draft a friendly payment reminder to each customer in Gmail.">
+    <div class="dm-tag">Live demo <b>1/3</b> · Chase the money</div>
+
+    <div class="dm-home">
+      <div class="dm-greet">
+        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><g fill="#D97757"><rect x="18.5" y="2" width="3" height="16" rx="1.5"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(45 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(90 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(135 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(180 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(225 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(270 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(315 20 20)"/></g></svg>
+        Evening, yuvan
+      </div>
+      <div class="dm-col dm-card">
+        <div class="dm-type"><span class="dm-ph">How can I help you today?</span><span class="dm-typed"></span><span class="dm-caret"></span></div>
+        <div class="dm-ctrl">
+          <span class="dm-plus">+</span>
+          <span class="dm-pill">Chat</span><span class="dm-pill sel">Cowork</span>
+          <span class="sp"></span>
+          <span class="dm-model">Sonnet 5</span><span class="dm-eff">High ⌄</span>
+          <span class="dm-mic"><svg viewBox="0 0 24 24" fill="none" stroke="#C9C6BC" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+        </div>
+        <div class="dm-foot">
+          <span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="#9A978E" stroke-width="1.8"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Project or folder ⌄</span>
+          <span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="#9A978E" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3 22 20H2Z"/><path d="M12 10v4M12 17.5v.01"/></svg>Skip ⌄</span>
+          <span class="sp"></span>
+          <span class="fi"><svg viewBox="0 0 24 24" fill="#9A978E"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>2× more usage until August 5</span>
+        </div>
+      </div>
+      <div class="dm-ideas">
+        <div class="lab">Ideas for you</div>
+        <div class="dm-idea"><span class="ic"></span>Send me a daily briefing</div>
+        <div class="dm-idea"><span class="ic"></span>Organize my inbox</div>
+        <div class="dm-idea"><span class="ic"></span>Customize Cowork for me</div>
+      </div>
+    </div>
+
+    <div class="dm-chat">
+      <div class="dm-topbar"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><g fill="#D97757"><rect x="18.5" y="2" width="3" height="16" rx="1.5"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(45 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(90 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(135 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(180 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(225 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(270 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(315 20 20)"/></g></svg>Chasing overdue invoices ⌄</div>
+      <div class="dm-thread">
+        <div class="dm-user dm-step" data-t="100">Go through QuickBooks and find every invoice more than 2 weeks overdue, then draft a friendly payment reminder to each customer in Gmail.</div>
+        <div class="dm-tool dm-step" data-t="700" data-done="2200">
+          <span class="ic"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="24" fill="#2CA01C"/><text x="24" y="33" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="22" fill="#fff">qb</text></svg></span>
+          <span><b>QuickBooks</b> · searching invoices — filter: overdue &gt; 14 days</span>
+          <span class="dm-spin"></span><span class="dm-res">4 found</span>
+        </div>
+        <div class="dm-tool dm-step" data-t="2600" data-done="4100">
+          <span class="ic"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="10" width="40" height="28" rx="6" fill="#F5F1E8"/><path d="M9 33V17l15 11 15-11v16" fill="none" stroke="#EA4335" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span><b>Gmail</b> · creating drafts — one per customer, personal tone</span>
+          <span class="dm-spin"></span><span class="dm-res">4 drafts created</span>
+        </div>
+        <div class="dm-ans dm-step" data-t="4600">
+          <svg class="astar" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><g fill="#D97757"><rect x="18.5" y="2" width="3" height="16" rx="1.5"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(45 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(90 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(135 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(180 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(225 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(270 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(315 20 20)"/></g></svg>
+          <div class="txt">Four invoices are more than two weeks overdue — <b>$5,425 outstanding</b>. I've drafted a friendly reminder for each customer, matched to how late they are:</div>
+        </div>
+        <div class="dm-twrap dm-step" data-t="5100">
+          <table class="dm-table">
+            <tr><th>Customer</th><th>Invoice</th><th class="r">Amount</th><th>Overdue</th></tr>
+            <tr><td>Rivera Landscaping</td><td class="mono">#1042</td><td class="r mono">$2,350</td><td><span class="chip hot">31 days</span></td></tr>
+            <tr><td>Bluebird Café</td><td class="mono">#1047</td><td class="r mono">$860</td><td><span class="chip warn">24 days</span></td></tr>
+            <tr><td>Hartman Dental</td><td class="mono">#1051</td><td class="r mono">$1,540</td><td><span class="chip warn">19 days</span></td></tr>
+            <tr><td>Kessler &amp; Sons</td><td class="mono">#1054</td><td class="r mono">$675</td><td><span class="chip warn">15 days</span></td></tr>
+          </table>
+        </div>
+        <div class="dm-approve dm-step" data-t="5900">
+          <svg viewBox="0 0 24 24" width="24" height="24"><rect x="5" y="4" width="5" height="16" rx="2" fill="#E9B29C"/><rect x="14" y="4" width="5" height="16" rx="2" fill="#E9B29C"/></svg>
+          <span><b>Nothing has been sent.</b> All 4 drafts wait in Gmail until you approve each one.</span>
+        </div>
+        <div class="dm-reply">Reply to Claude…<span class="sp"></span><span class="m">Sonnet 5</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMO 2 · GROWTH — follow up uncontacted leads -->
+  <section class="slide demo-slide" data-prompt="Check HubSpot for this week's new leads that nobody has contacted yet, rank them by likely deal size, and draft a personal follow-up for each.">
+    <div class="dm-tag">Live demo <b>2/3</b> · Follow up the leads</div>
+
+    <div class="dm-home">
+      <div class="dm-greet">
+        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><g fill="#D97757"><rect x="18.5" y="2" width="3" height="16" rx="1.5"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(45 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(90 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(135 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(180 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(225 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(270 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(315 20 20)"/></g></svg>
+        Evening, yuvan
+      </div>
+      <div class="dm-col dm-card">
+        <div class="dm-type"><span class="dm-ph">How can I help you today?</span><span class="dm-typed"></span><span class="dm-caret"></span></div>
+        <div class="dm-ctrl">
+          <span class="dm-plus">+</span>
+          <span class="dm-pill">Chat</span><span class="dm-pill sel">Cowork</span>
+          <span class="sp"></span>
+          <span class="dm-model">Sonnet 5</span><span class="dm-eff">High ⌄</span>
+          <span class="dm-mic"><svg viewBox="0 0 24 24" fill="none" stroke="#C9C6BC" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+        </div>
+        <div class="dm-foot">
+          <span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="#9A978E" stroke-width="1.8"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Project or folder ⌄</span>
+          <span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="#9A978E" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3 22 20H2Z"/><path d="M12 10v4M12 17.5v.01"/></svg>Skip ⌄</span>
+          <span class="sp"></span>
+          <span class="fi"><svg viewBox="0 0 24 24" fill="#9A978E"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>2× more usage until August 5</span>
+        </div>
+      </div>
+      <div class="dm-ideas">
+        <div class="lab">Ideas for you</div>
+        <div class="dm-idea"><span class="ic"></span>Send me a daily briefing</div>
+        <div class="dm-idea"><span class="ic"></span>Organize my inbox</div>
+        <div class="dm-idea"><span class="ic"></span>Customize Cowork for me</div>
+      </div>
+    </div>
+
+    <div class="dm-chat">
+      <div class="dm-topbar"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><g fill="#D97757"><rect x="18.5" y="2" width="3" height="16" rx="1.5"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(45 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(90 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(135 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(180 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(225 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(270 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(315 20 20)"/></g></svg>This week's uncontacted leads ⌄</div>
+      <div class="dm-thread">
+        <div class="dm-user dm-step" data-t="100">Check HubSpot for this week's new leads that nobody has contacted yet, rank them by likely deal size, and draft a personal follow-up for each.</div>
+        <div class="dm-tool dm-step" data-t="700" data-done="2200">
+          <span class="ic"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><g stroke="#FF7A59" stroke-width="3"><line x1="24" y1="20" x2="24" y2="12"/><line x1="28" y1="27" x2="35" y2="32"/><line x1="20" y1="27" x2="13" y2="32"/></g><g fill="#FF7A59"><circle cx="24" cy="25" r="6"/><circle cx="24" cy="9" r="4"/><circle cx="37" cy="34" r="4"/><circle cx="11" cy="34" r="4"/></g></svg></span>
+          <span><b>HubSpot</b> · searching contacts — created this week, no outreach logged</span>
+          <span class="dm-spin"></span><span class="dm-res">5 of 12 uncontacted</span>
+        </div>
+        <div class="dm-tool dm-step" data-t="2600" data-done="4100">
+          <span class="ic"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="10" width="40" height="28" rx="6" fill="#F5F1E8"/><path d="M9 33V17l15 11 15-11v16" fill="none" stroke="#EA4335" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span><b>Gmail</b> · drafting 5 follow-ups — personalized from each lead's notes</span>
+          <span class="dm-spin"></span><span class="dm-res">5 drafts created</span>
+        </div>
+        <div class="dm-ans dm-step" data-t="4600">
+          <svg class="astar" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><g fill="#D97757"><rect x="18.5" y="2" width="3" height="16" rx="1.5"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(45 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(90 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(135 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(180 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(225 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(270 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(315 20 20)"/></g></svg>
+          <div class="txt">Twelve leads came in this week — <b>five were never contacted</b>. Ranked by likely deal size, each with a personal draft ready:</div>
+        </div>
+        <div class="dm-lead dm-step" data-t="5100"><span class="rk">1</span><span><b>Meridian Property Group</b><br><span class="note">wants a monthly-service quote by Friday</span></span><span class="chip hot">call first</span><span class="amt">≈ $12,000 / yr</span></div>
+        <div class="dm-lead dm-step" data-t="5400"><span class="rk">2</span><span><b>Tuscan Table Restaurant</b><br><span class="note">referred by Bluebird Café</span></span><span class="amt">≈ $4,800</span></div>
+        <div class="dm-lead dm-step" data-t="5700"><span class="rk">3</span><span><b>J. Alvarez</b><br><span class="note">website form — backyard redesign</span></span><span class="amt">≈ $1,200</span></div>
+        <div class="dm-approve dm-step" data-t="6300">
+          <svg viewBox="0 0 24 24" width="24" height="24"><rect x="5" y="4" width="5" height="16" rx="2" fill="#E9B29C"/><rect x="14" y="4" width="5" height="16" rx="2" fill="#E9B29C"/></svg>
+          <span><b>5 drafts waiting in Gmail</b> — plus 2 smaller leads. Nothing sends without you.</span>
+        </div>
+        <div class="dm-reply">Reply to Claude…<span class="sp"></span><span class="m">Sonnet 5</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMO 3 · ADMIN — recurring Monday briefing (the scheduler) -->
+  <section class="slide demo-slide" data-prompt="Every Monday at 8am, send me a briefing: cash in and out from QuickBooks and PayPal, new HubSpot leads, and anything overdue I should chase.">
+    <div class="dm-tag">Live demo <b>3/3</b> · Put it on a schedule</div>
+
+    <div class="dm-home">
+      <div class="dm-greet">
+        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><g fill="#D97757"><rect x="18.5" y="2" width="3" height="16" rx="1.5"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(45 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(90 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(135 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(180 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(225 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(270 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(315 20 20)"/></g></svg>
+        Evening, yuvan
+      </div>
+      <div class="dm-col dm-card">
+        <div class="dm-type"><span class="dm-ph">How can I help you today?</span><span class="dm-typed"></span><span class="dm-caret"></span></div>
+        <div class="dm-ctrl">
+          <span class="dm-plus">+</span>
+          <span class="dm-pill">Chat</span><span class="dm-pill sel">Cowork</span>
+          <span class="sp"></span>
+          <span class="dm-model">Sonnet 5</span><span class="dm-eff">High ⌄</span>
+          <span class="dm-mic"><svg viewBox="0 0 24 24" fill="none" stroke="#C9C6BC" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+        </div>
+        <div class="dm-foot">
+          <span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="#9A978E" stroke-width="1.8"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Project or folder ⌄</span>
+          <span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="#9A978E" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3 22 20H2Z"/><path d="M12 10v4M12 17.5v.01"/></svg>Skip ⌄</span>
+          <span class="sp"></span>
+          <span class="fi"><svg viewBox="0 0 24 24" fill="#9A978E"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>2× more usage until August 5</span>
+        </div>
+      </div>
+      <div class="dm-ideas">
+        <div class="lab">Ideas for you</div>
+        <div class="dm-idea"><span class="ic"></span>Send me a daily briefing</div>
+        <div class="dm-idea"><span class="ic"></span>Organize my inbox</div>
+        <div class="dm-idea"><span class="ic"></span>Customize Cowork for me</div>
+      </div>
+    </div>
+
+    <div class="dm-chat">
+      <div class="dm-topbar"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><g fill="#D97757"><rect x="18.5" y="2" width="3" height="16" rx="1.5"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(45 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(90 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(135 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(180 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(225 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(270 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(315 20 20)"/></g></svg>Monday morning briefing ⌄</div>
+      <div class="dm-thread">
+        <div class="dm-user dm-step" data-t="100">Every Monday at 8am, send me a briefing: cash in and out from QuickBooks and PayPal, new HubSpot leads, and anything overdue I should chase.</div>
+        <div class="dm-tool dm-step" data-t="700" data-done="2200">
+          <span class="ic"><svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="19" fill="none" stroke="#8FB0FF" stroke-width="4"/><path d="M24 13v11l8 5" stroke="#8FB0FF" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span><b>Scheduled task</b> · repeats every Monday · 8:00 AM</span>
+          <span class="dm-spin"></span><span class="dm-res">scheduled</span>
+        </div>
+        <div class="dm-ans dm-step" data-t="2700">
+          <svg class="astar" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><g fill="#D97757"><rect x="18.5" y="2" width="3" height="16" rx="1.5"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(45 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(90 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(135 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(180 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(225 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(270 20 20)"/><rect x="18.5" y="2" width="3" height="16" rx="1.5" transform="rotate(315 20 20)"/></g></svg>
+          <div class="txt">Done — it's on the calendar. Here's a preview of what will land in your inbox <b>every Monday at 8:00 AM</b>, pulled fresh each week:</div>
+        </div>
+        <div class="dm-brief dm-step" data-t="3300">
+          <div class="bh">MONDAY BRIEFING · PREVIEW · WEEK OF JUL 6</div>
+          <div class="dm-brow"><span class="dot" style="background:#2CA01C"></span>Cash in — QuickBooks + PayPal<span class="v up">+ $8,420</span></div>
+          <div class="dm-brow"><span class="dot" style="background:#E5735C"></span>Cash out — payroll, supplies, rent<span class="v dn">− $5,130</span></div>
+          <div class="dm-brow"><span class="dot" style="background:#3E6BE8"></span>Net for the week<span class="v up">+ $3,290</span></div>
+          <div class="dm-brow"><span class="dot" style="background:#FF7A59"></span>New leads — HubSpot<span class="v">7 · 2 hot</span></div>
+          <div class="dm-brow"><span class="dot" style="background:#C9A400"></span>Overdue invoices to chase<span class="v">2 · $1,535</span></div>
+        </div>
+        <div class="dm-sched dm-step" data-t="4100">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#93C99B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 3v5h-5"/></svg>
+          <span><b>Runs by itself.</b> Every Monday, before your first coffee — no one has to remember to ask.</span>
+        </div>
+        <div class="dm-reply">Reply to Claude…<span class="sp"></span><span class="m">Sonnet 5</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= SLIDE 20 · THANK YOU ========================= -->
   <section class="slide thanks-slide">
     <div class="thanks-glow"></div>
     <div class="thanks-inner">
@@ -893,6 +1213,7 @@ class Deck{
   show(n){
     this.i=Math.max(0,Math.min(n,this.slides.length-1));
     this.slides.forEach((s,k)=>s.classList.toggle('active',k===this.i));
+    demoPlayer.onShow(this.slides[this.i]);
     const pad=v=>String(v).padStart(2,'0');
     this.counter.textContent=`${pad(this.i+1)} / ${pad(this.slides.length)}`;
     this.progress.style.width=`${(this.i+1)/this.slides.length*100}%`;
@@ -920,6 +1241,52 @@ class Deck{
     },{passive:true});
   }
 }
+/* ===========================================================
+   DEMO PLAYER — replays the Claude-app animation whenever a
+   .demo-slide becomes active. Timeline: after 800ms the prompt
+   from data-prompt types into the input (.typing), then the
+   slide flips to .chatting and every [data-t] element gains
+   .on at its offset; tool cards gain .done at data-done.
+   Leaving the slide cancels all timers and resets state.
+   =========================================================== */
+const demoPlayer={
+  timers:[],
+  clear(){this.timers.forEach(clearTimeout);this.timers=[];},
+  wait(fn,ms){this.timers.push(setTimeout(fn,ms));},
+  reset(s){
+    s.classList.remove('typing','chatting');
+    s.querySelectorAll('.on').forEach(el=>el.classList.remove('on'));
+    s.querySelectorAll('.done').forEach(el=>el.classList.remove('done'));
+    const t=s.querySelector('.dm-typed'); if(t)t.textContent='';
+  },
+  onShow(active){
+    this.clear();
+    document.querySelectorAll('.demo-slide').forEach(s=>this.reset(s));
+    if(active&&active.classList.contains('demo-slide'))this.play(active);
+  },
+  play(s){
+    const text=s.dataset.prompt||'';
+    const out=s.querySelector('.dm-typed');
+    this.wait(()=>{
+      s.classList.add('typing');
+      let i=0;
+      const tick=()=>{
+        out.textContent=text.slice(0,++i);
+        if(i<text.length)this.wait(tick,18);
+        else this.wait(()=>this.chat(s),650);
+      };
+      tick();
+    },800);
+  },
+  chat(s){
+    s.classList.add('chatting');
+    s.querySelectorAll('[data-t]').forEach(el=>{
+      this.wait(()=>el.classList.add('on'),+el.dataset.t);
+      if(el.dataset.done)this.wait(()=>el.classList.add('done'),+el.dataset.done);
+    });
+  }
+};
+
 const deck=new Deck();
 
 /* ===========================================================
