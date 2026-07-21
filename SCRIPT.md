@@ -33,16 +33,17 @@ ADVANCE (skip past slides 07 to 16, straight to the demo section)
 
 ---
 
-## PROBLEM + DEMO PAIRS
+## SCENARIO + DEMO PAIRS
 
-Each demo has a problem slide right before it in the deck. Read the problem slide, advance, and the demo is the solution. On the demo: the prompt types itself (about 5 seconds), the coral button pulses, CLICK SEND, narrate the results.
+Each demo has a scenario slide right before it. The character is Max, who runs a small property-maintenance company. Tell Max's problem, advance, and the demo is the solution. On the demo: the prompt types itself (about 5 seconds), the coral button pulses, CLICK SEND, narrate the results.
 
-### SLIDE 17 · Problem 1: Getting paid
+### SLIDE 17 · Scenario 1: Saturday, 9 PM
 
-- The slide says it: customers pay late, chasing them means digging through QuickBooks and writing reminders one at a time, so it slides and the money sits.
-- Add if useful: most small businesses have thousands of dollars sitting in unpaid invoices right now.
+- Meet Max. He runs a small property-maintenance company.
+- It is Saturday night and Max is at his desk instead of with his family, because four customers owe him money.
+- Every reminder email takes twenty awkward minutes to write without sounding rude. So none get sent, and the money keeps sitting.
 
-ADVANCE — the demo is the fix
+ADVANCE — the demo is what Max does instead
 
 ### SLIDE 18 · Demo 1: Chase the money
 
@@ -59,12 +60,13 @@ Results:
 
 ADVANCE
 
-### SLIDE 19 · Problem 2: The books don't match
+### SLIDE 19 · Scenario 2: The hour that never comes back
 
-- The slide says it: payments land in PayPal, invoices live in QuickBooks, matching them by hand takes an hour, and what slips through is real money.
-- Add if useful: partial payments and jobs that never got invoiced are the two things nobody catches by hand.
+- Max again. Every Friday he spends an hour matching PayPal payments to QuickBooks invoices by hand.
+- Last month two things slipped past him: a customer who paid only half an invoice, and a job that never got billed at all.
+- That is real money, and by hand nobody catches it.
 
-ADVANCE — the demo is the fix
+ADVANCE — the demo is what Max does instead
 
 ### SLIDE 20 · Demo 2: Balance the books
 
@@ -81,12 +83,13 @@ Results:
 
 ADVANCE
 
-### SLIDE 21 · Problem 3: You find out too late
+### SLIDE 21 · Scenario 3: Three weeks too late
 
-- The slide says it: cash problems surface weeks after they start, because a weekly overview means opening three tools on a Monday morning.
-- Add if useful: every demo so far was asked for manually. The next one is asked once and runs forever.
+- One last Max story. His cash dipped, and he noticed three weeks after it started.
+- Not because he does not care. Because checking means opening QuickBooks, PayPal, and HubSpot on the busiest morning of the week, so it never happens.
+- Everything so far was asked for manually. The next demo is asked once and runs forever.
 
-ADVANCE — the demo is the fix
+ADVANCE — the demo is what Max does instead
 
 ### SLIDE 22 · Demo 3: Put it on a schedule
 
