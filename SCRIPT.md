@@ -1,6 +1,6 @@
-# Claude for Small Business — Full Presenter Script
+# Claude for Small Business — Word-for-Word Script
 
-23 slides, about 15 minutes. Every slide has its own section below.
+Say the quoted text as written. Stage directions are in [brackets].
 
 ## Setup
 - Open index.html, press F11 for fullscreen
@@ -10,222 +10,266 @@
 
 ---
 
-### SLIDE 1 · Title (0:00)
+### SLIDE 1 · Title
 
-- This talk is about what Claude actually does for a small business, using the tools you already run.
-- The rule for everything in this talk: it drafts, you approve, nothing sends itself.
+"Hi, I'm Yuvan. Today I'm going to show you what Claude can actually do for a small business, using software the business already has. Everything you're about to see follows one rule, and it's on the slide: Claude drafts the work, you approve it, and nothing gets sent without your permission."
 
-ADVANCE
+[ADVANCE]
 
-### SLIDE 2 · What it is (0:30)
+### SLIDE 2 · What it is
 
-- Claude has a mode called Cowork. A chatbot answers questions. Cowork carries out multi-step tasks across your tools.
-- It can also repeat those tasks automatically on a schedule.
-- "Claude for Small Business" is a toggle inside Cowork. It connects seven tools: QuickBooks, PayPal, HubSpot, Canva, DocuSign, Google Workspace, Microsoft 365.
-- That is all the setup theory. The rest of the talk is what it looks like in practice.
+"Claude has a mode called Cowork. The difference is simple. A chatbot answers questions. Cowork actually does the work. You give it a task that takes multiple steps across multiple programs, and it carries the whole thing out. It can also repeat that task automatically on a schedule, like every Monday morning.
 
-ADVANCE
+Claude for Small Business is a setting inside Cowork. When you turn it on, Claude connects to seven programs: QuickBooks, PayPal, HubSpot, Canva, DocuSign, Google Workspace, and Microsoft 365.
 
-### SLIDE 3 · Software you already run (1:15)
+That's all the background you need. Everything else today is showing you what it does."
 
-- No new software to buy or learn. Claude sits in the middle of the stack most small businesses already pay for.
-- It reads from these tools and writes to them. You keep working where you already work.
-- Three groups on the wheel: money (green), sales and marketing (orange), documents and email (blue).
+[ADVANCE]
 
-ADVANCE
+### SLIDE 3 · Software you already run
 
-### SLIDE 4 · Money: QuickBooks and PayPal (2:00)
+"This is the software side of it. Claude sits in the middle of the programs a small business already pays for. It reads information from them and it writes back to them. You don't buy anything new and you don't learn anything new.
 
-- QuickBooks: reads invoices, bills, and the P&L live. Reconciles accounts, flags duplicates and uncategorized entries, pulls year-to-date income for tax estimates.
-- PayPal: spots overdue and unpaid invoices, drafts payment reminders, surfaces disputes. Refunds only happen with approval.
+The green ones handle money. The orange ones handle sales and marketing. The blue ones handle documents and email."
 
-ADVANCE
+[ADVANCE]
 
-### SLIDE 5 · Growth: HubSpot and Canva (2:30)
+### SLIDE 4 · Money: QuickBooks and PayPal
 
-- HubSpot: scores inbound leads by fit and urgency. Logs calls, notes, and deal updates so the CRM stays current without anyone doing data entry.
-- Canva: turns a brief into on-brand social posts, captions, and a posting calendar, in your colors and fonts.
+"Let's start with money.
 
-ADVANCE
+QuickBooks is accounting software. It's where a business keeps its invoices, which are the bills you send customers, and its P and L. P and L stands for profit and loss statement. That's the report showing money that came in, money that went out, and what was left over. Claude reads all of that live. It can also reconcile the accounts. Reconciling just means comparing two sets of records to make sure they match. Claude flags anything that got entered twice or never got categorized.
 
-### SLIDE 6 · Admin: DocuSign, Google, Microsoft (3:00)
+PayPal is where the payments actually arrive. Claude can spot which invoices are overdue, write the payment reminders, and flag disputes, which is when a customer challenges a charge. Refunds only happen if the owner approves them."
 
-- DocuSign: reads contracts, flags non-standard terms in plain English, preps a redline. A first pass, not a lawyer.
-- Google Workspace and Microsoft 365: same abilities on either side. Draft and queue emails, block calendar time, work from your docs, spreadsheets, and files.
+[ADVANCE]
 
-ADVANCE
+### SLIDE 5 · Growth: HubSpot and Canva
 
-### SLIDE 7 · Four steps, every time (3:30) — most important slide, go slow
+"Next group: growth.
 
-- Every workflow runs the same four steps.
-- Step 1: reads live data from a connected tool, not a stale export.
-- Step 2: drafts the work. The email, the report, the forecast.
-- Step 3: you approve or edit. Nothing moves until you say so.
-- Step 4: only then does it send, post, or file.
-- Repeat the banner line: it drafts, you approve, nothing sends itself.
+HubSpot is a CRM. That stands for customer relationship management. It's the software where a business tracks its customers and its leads. A lead is a potential customer who showed interest but hasn't bought yet. Claude scores those leads, meaning it works out which ones are most likely to turn into real business, and it keeps the records updated so nobody has to do the data entry.
 
-ADVANCE
+Canva is a design tool. Claude can turn a simple idea into finished social media posts, captions, and a posting schedule, using the business's own colors and fonts."
 
-### SLIDE 8 · Invoice chasing and cash flow (4:30)
+[ADVANCE]
 
-- Today: checking QuickBooks and PayPal by hand, writing reminders one at a time, guessing next month's cash.
-- With Claude: scans both tools, drafts a reminder for every overdue customer, tone-matched to payment history. Gentle for reliable customers, firmer for repeat late payers. All queued for approval.
-- Also builds a 30/60/90-day cash-flow forecast from receivables and payment history, with confidence bands and flagged risks. "Will I make payroll" gets a real answer.
+### SLIDE 6 · Admin: DocuSign, Google, Microsoft
 
-ADVANCE
+"Last group: the paperwork.
 
-### SLIDE 9 · Month-end close and tax prep (5:15)
+DocuSign is where contracts get signed electronically. Claude can read a contract, point out anything unusual in plain English, and prepare a redline, which is a marked-up copy showing suggested changes. That's a first pass, not a replacement for a lawyer.
 
-- Today: reconciling QuickBooks against PayPal settlements by hand.
-- With Claude: reconciles automatically, flags uncategorized transactions, duplicate charges, missing receipts. Writes a plain-English P&L narrative explaining why revenue moved.
-- Tax time: calculates quarterly estimated tax from year-to-date income. Scans for contractors paid over $600 and flags missing W-9s before 1099 season.
-- The Sunday-night work is done Monday morning instead.
+Then Google Workspace and Microsoft 365. Those cover email, calendars, documents, and spreadsheets. Claude works with either one. It drafts emails, schedules follow-ups, and pulls information out of your files."
 
-ADVANCE
+[ADVANCE]
 
-### SLIDE 10 · Lead triage and content strategy (6:00)
+### SLIDE 7 · Four steps, every time — go slow here
 
-- Most owners decide who to call back by scrolling the CRM and guessing.
-- Claude scores every inbound lead by engagement, fit, and urgency. Output: a "call these 5 today" list with talking points drafted and calendar time blocked.
-- Marketing side: reads sales data to find what is selling and what is sitting, then produces a 30-day content brief. What to push, what to discount, what to leave alone.
+"This is the most important slide in the deck. Every workflow you'll see runs the same four steps.
 
-ADVANCE
+Step one: Claude reads live data from a connected program. Current numbers, not an old export.
 
-### SLIDE 11 · When tools talk to each other (6:45)
+Step two: it drafts the work. The email, the report, the forecast.
 
-- This is where it stops being a chatbot.
-- Revenue from QuickBooks plus ad performance from HubSpot, combined into one recurring summary.
-- When the summary shows a slowdown, it flags it and triggers a marketing campaign for approval, on its own.
-- A chatbot waits to be asked. A coworker watches and brings things to you.
+Step three: the owner approves it or edits it. Nothing moves forward without that.
 
-ADVANCE
+Step four: only after approval does anything actually get sent, posted, or filed.
 
-### SLIDE 12 · Service, contracts, hiring (7:30)
+That's the rule from the first slide. It drafts, you approve, nothing sends itself."
 
-- Customer pulse: disputes, tickets, and reviews combined into one report with the top three things to fix.
-- Ticket response: drafts a tone-matched reply, can issue a PayPal refund, approval required.
-- Contracts: reads an NDA or vendor agreement, flags odd terms, produces a redline.
-- Hiring: a rough brief becomes a job post, an interview guide with scoring rubric, and an offer letter template.
+[ADVANCE]
 
-ADVANCE
+### SLIDE 8 · Invoice chasing and cash flow
 
-### SLIDE 13 · One workflow, end to end (8:15)
+"Here's the first real workflow: chasing unpaid invoices.
 
-- Transition slide. The next section shows real prompts in the actual Claude interface, typed the way an owner would type them.
+Right now that means checking QuickBooks and PayPal by hand, writing reminder emails one at a time, and guessing what next month's cash will look like.
 
-ADVANCE
+With Claude, it scans both programs and writes a reminder for every overdue customer, matched to that customer's history. Someone who always pays on time gets a gentle nudge. Someone who's late every month gets a firmer note. All of them wait in a queue for approval.
 
-### SLIDE 14 · Start small, start today (8:45)
+It also builds a cash flow forecast for the next 30, 60, and 90 days. Cash flow just means the money coming in versus the money going out over time. So the question of whether payroll will clear next month gets a real answer instead of a guess."
 
-- Step 1: on a paid Claude plan, open Cowork and turn on the Small Business toggle.
-- Step 2: connect one tool first, the one tied to the biggest headache. Not all seven.
-- Step 3: run one workflow on last month's closed data before trusting it live.
-- Step 4: set approval preferences so nothing sends without sign-off.
+[ADVANCE]
 
-ADVANCE
+### SLIDE 9 · Month-end close and tax prep
 
-### SLIDE 15 · The guardrails (9:30)
+"Next: closing the books at the end of the month. Closing the books means finalizing all the records so you know exactly what happened that month.
 
-- It cannot touch anything you cannot already touch in the source system. It uses your logins and your permissions.
-- It never sends, posts, or pays without approval.
+Today that's comparing QuickBooks against PayPal by hand and hoping nothing is missing. Claude does that comparison automatically and flags transactions with no category, duplicate charges, and missing receipts. Then it writes a plain English summary of the P and L. So instead of staring at a spreadsheet, the owner reads a paragraph explaining why revenue went up or down.
 
-ADVANCE
+The same idea works at tax time. It calculates quarterly estimated taxes, which are the tax payments businesses make four times a year, from the actual income so far. And it finds every contractor who was paid more than 600 dollars, because those people need a tax form called a 1099, and it flags anyone missing a W-9, which is the form you have to collect before you can send a 1099."
 
-### SLIDE 16 · One rule to leave with (10:00)
+[ADVANCE]
 
-- If money is the pain: start with invoice chasing or the cash-flow forecast.
-- If time is the pain: start with lead triage or customer pulse.
-- Pick one. That is the first workflow. The next section shows what it looks like.
+### SLIDE 10 · Lead triage and content strategy
 
-ADVANCE — scenario and demo section begins
+"This one is about deciding who to call and what to post.
+
+Most owners scroll through their customer list and guess who's worth calling back. Claude scores every lead by how engaged they are, how well they fit, and how urgent they seem, then hands back a list of the five people to call today, with talking points already written and time already blocked on the calendar.
+
+On the marketing side, it reads the sales data to see what's actually selling and what's sitting, and turns that into a 30-day content plan. What to promote, what to discount, what to leave alone."
+
+[ADVANCE]
+
+### SLIDE 11 · When tools talk to each other
+
+"This slide is where it stops being a chatbot.
+
+Claude pulls revenue from QuickBooks and ad results from HubSpot into one combined summary that arrives automatically every week. And when that summary shows sales slowing down, Claude notices on its own, flags it, and prepares a marketing campaign for approval. Nobody asked it to.
+
+A chatbot waits to be asked. A coworker notices things and brings them to you."
+
+[ADVANCE]
+
+### SLIDE 12 · Service, contracts, hiring
+
+"Four more abilities, quickly.
+
+Customer pulse: it combines payment disputes, support tickets, and reviews into one report with the top three things to fix.
+
+Ticket response: it drafts a reply to a customer complaint in the owner's tone, and it can process a refund, with approval.
+
+Contracts: it reads an NDA, which is a non-disclosure agreement, or a vendor contract, and flags anything unusual.
+
+And hiring: it turns a rough description into a job post, interview questions with a scoring guide, and an offer letter."
+
+[ADVANCE]
+
+### SLIDE 13 · One workflow, end to end
+
+"That's the overview. The rest of this talk is the actual product. Real prompts, typed into the real Claude interface, exactly the way an owner would type them."
+
+[ADVANCE]
+
+### SLIDE 14 · Start small, start today
+
+"Turning it on takes four steps, and none of them are technical.
+
+One: on a paid Claude plan, open Cowork and turn on the Small Business toggle.
+
+Two: connect one program. Not all seven. Whichever one is attached to your biggest headache.
+
+Three: run one workflow on last month's finished numbers first, so you can check the results against reality before trusting it with anything live.
+
+Four: set the approval rules so nothing ever goes out without sign-off."
+
+[ADVANCE]
+
+### SLIDE 15 · The guardrails
+
+"Two sentences on safety.
+
+Claude can't touch anything the owner can't already touch. It works with your accounts and your permissions, nothing extra. And it never sends, posts, or pays without approval."
+
+[ADVANCE]
+
+### SLIDE 16 · One rule to leave with
+
+"One decision to leave with.
+
+If money is the biggest pain, start with invoice chasing or the cash flow forecast. If time is the biggest pain, start with lead triage or the customer report.
+
+Pick one workflow. The next section shows exactly what that looks like."
+
+[ADVANCE — scenario and demo section begins]
 
 ---
 
-## SCENARIO + DEMO PAIRS
+### SLIDE 17 · Scenario 1: Saturday, 9 PM
 
-The character is Max, who runs a small property-maintenance company. Tell Max's problem on the scenario slide, advance, and the demo is the solution. On demos: the prompt types itself (about 5 seconds), the coral button pulses, CLICK SEND, narrate the results.
+"This is Max. He runs a small property maintenance company.
 
-### SLIDE 17 · Scenario 1: Saturday, 9 PM (10:30)
+It's Saturday at 9 PM and he's at his desk instead of with his family, because four customers owe him money. Every reminder email takes him twenty minutes, because it's hard to ask for money without sounding rude. So most weekends none of them get written, and the money keeps sitting out there."
 
-- Meet Max. He runs a small property-maintenance company.
-- It is Saturday night and Max is at his desk instead of with his family, because four customers owe him money.
-- Every reminder email takes twenty awkward minutes to write without sounding rude. So none get sent, and the money keeps sitting.
+[ADVANCE — the demo starts typing by itself]
 
-ADVANCE — the demo is what Max does instead
+### SLIDE 18 · Demo 1: Chase the money
 
-### SLIDE 18 · Demo 1: Chase the money (11:00)
+[While it types:]
 
-While it types:
-- This is the whole ask, in plain English. Find every invoice more than two weeks overdue, draft a reminder to each customer.
+"This is everything Max has to do. One sentence, plain English: go through QuickBooks, find every invoice more than two weeks overdue, and draft a reminder to each customer."
 
-CLICK SEND
+[CLICK SEND]
 
-Results:
-- QuickBooks search runs first: four invoices found.
-- Gmail creates four drafts.
-- $5,425 outstanding, the worst invoice is 31 days late.
-- Banner: nothing has been sent. Four drafts waiting for approval.
-- Max's Saturday night just became a two-minute review.
+"Now watch the steps. First it searches QuickBooks. Four overdue invoices. Then it moves to Gmail and writes four drafts.
 
-ADVANCE
+And there's the result. 5,425 dollars sitting in unpaid invoices, and the worst one is 31 days late.
 
-### SLIDE 19 · Scenario 2: The hour that never comes back (11:45)
+Read the banner at the bottom. Nothing has been sent. Four drafts are waiting for Max to approve them. His Saturday night just became a two-minute review."
 
-- Max again. Every Friday he spends an hour matching PayPal payments to QuickBooks invoices by hand.
-- Last month two things slipped past him: a customer who paid only half an invoice, and a job that never got billed at all.
-- That is real money, and by hand nobody catches it.
+[ADVANCE]
 
-ADVANCE — the demo is what Max does instead
+### SLIDE 19 · Scenario 2: The hour that never comes back
 
-### SLIDE 20 · Demo 2: Balance the books (12:15)
+"Max again. Every Friday he spends an hour matching the payments that came in through PayPal against the invoices in QuickBooks.
 
-While it types:
-- Match last week's PayPal payments against open QuickBooks invoices, flag anything that does not line up.
+Last month two things slipped past him. One customer paid only half an invoice. And one job never got billed at all. That's real money, and when you match records by hand, that's exactly the kind of thing nobody catches."
 
-CLICK SEND
+[ADVANCE — the demo starts typing by itself]
 
-Results:
-- 23 payments, 21 matched automatically.
-- Flag 1: Bluebird Cafe, the same customer from demo 1, paid $430 on an $860 invoice. Partial payment.
-- Flag 2: a $175 payment with no matching invoice. A job that was never billed. Found money.
-- Green banner: about 45 minutes of bookkeeping done automatically.
+### SLIDE 20 · Demo 2: Balance the books
 
-ADVANCE
+[While it types:]
 
-### SLIDE 21 · Scenario 3: Three weeks too late (13:00)
+"Same idea. Match last week's PayPal payments against the open invoices in QuickBooks, and flag anything that doesn't line up."
 
-- One last Max story. His cash dipped, and he noticed three weeks after it started.
-- Not because he does not care. Because checking means opening QuickBooks, PayPal, and HubSpot on the busiest morning of the week, so it never happens.
-- Everything so far was asked for manually. The next demo is asked once and runs forever.
+[CLICK SEND]
 
-ADVANCE — the demo is what Max does instead
+"Twenty-three payments came in. Twenty-one matched automatically. The two that didn't are the whole story.
 
-### SLIDE 22 · Demo 3: Put it on a schedule (13:30)
+First flag: Bluebird Cafe, the same customer from the first demo, paid 430 dollars on an 860 dollar invoice. That's a partial payment Max would have missed.
 
-While it types:
-- One prompt: every Monday at 8am, send a briefing with cash in and out, new leads, and anything overdue.
+Second flag: a 175 dollar payment with no invoice behind it. That's a job that was never billed. That's found money.
 
-CLICK SEND
+And the green banner at the bottom is about 45 minutes of Friday bookkeeping that just did itself."
 
-Results:
-- One line creates a standing job. The card confirms: repeats every Monday, 8:00 AM.
-- The preview shows cash in, cash out, net for the week, new leads, overdue invoices.
-- It lands in the inbox every Monday without anyone asking again. That is the difference between a chatbot and a coworker.
+[ADVANCE]
 
-ADVANCE
+### SLIDE 21 · Scenario 3: Three weeks too late
 
-### SLIDE 23 · Thank you (14:15)
+"One last Max story. A few months ago his cash dipped, and he didn't notice for three weeks.
 
-- Repeat the rule once: it drafts, you approve, nothing sends itself.
-- Suggested action: pick one workflow, money or time, and run it this week on last month's data.
-- Stay on this slide for questions.
+Not because he doesn't care. Because checking means opening QuickBooks, PayPal, and HubSpot back to back on a Monday morning, the busiest morning of the week. So the weekly check never happens.
+
+And here's the thing. Everything you've seen so far, someone had to ask for. This last one, you ask for once."
+
+[ADVANCE — the demo starts typing by itself]
+
+### SLIDE 22 · Demo 3: Put it on a schedule
+
+[While it types:]
+
+"One sentence: every Monday at 8 AM, send me a briefing with cash in, cash out, new leads, and anything overdue."
+
+[CLICK SEND]
+
+"That one line just created a standing job. The card confirms it: repeats every Monday at 8 AM.
+
+And this is the preview of what lands in the inbox. Cash in. Cash out. The net for the week. New leads. And the overdue invoices to chase.
+
+It shows up every Monday from now on, and nobody has to remember to ask. That's the difference between a chatbot and a coworker."
+
+[ADVANCE]
+
+### SLIDE 23 · Thank you
+
+"That's the whole talk. The rule one more time: it drafts, you approve, nothing sends itself.
+
+If you want to try it, pick one workflow, money or time, and run it this week on last month's numbers. Thank you."
+
+[Stay on this slide for questions]
 
 ---
 
-## Backup
+## Backup answers
 
-- Running long: trim slides 9, 10, and 12 to one line each. Never cut slide 7 or any demo pair.
-- Demo desync: arrow back, arrow forward. It resets in about 2 seconds.
-- Cost question: part of a paid Claude plan, connectors included. Check claude.com for current pricing.
-- "Can it send by accident": no, every send, post, payment, or refund stops at an approval step.
-- Data question: it uses your existing logins and permissions. It cannot touch anything your own account cannot.
+Cost: "It's part of a paid Claude plan, and the connectors are included. Current pricing is on claude.com."
+
+Can it send something by accident: "No. Every send, post, payment, and refund stops at an approval step. You saw the banners in the demos."
+
+What about my data: "It uses your existing logins and your existing permissions. It can't see or touch anything your own account can't."
+
+Which tool should I connect first: "Whichever one is attached to your biggest headache right now."
+
+If a demo desyncs: arrow back, then forward. It resets in about two seconds.
